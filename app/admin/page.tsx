@@ -217,11 +217,10 @@ export default function AdminPage() {
   }, []);
 
   useEffect(() => {
-    // Check if already logged in by trying to reach a protected route
-    fetch("/api/data").then(r => {
-      if (r.ok) { setLoggedIn(true); r.json().then(setData); }
+    fetch("/api/auth-check").then(r => {
+      if (r.ok) { setLoggedIn(true); fetchData(); }
     });
-  }, []);
+  }, [fetchData]);
 
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
