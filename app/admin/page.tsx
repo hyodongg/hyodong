@@ -276,6 +276,29 @@ export default function AdminPage() {
     }
   }
 
+  async function handleImageDelete() {
+    setUploading(true);
+    setUploadMsg("");
+    try {
+      const res = await fetch("/api/upload", { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ key: projectTab }) });
+      if (res.ok) {
+        setData(prev => {
+          if (!prev) return prev;
+          const { [projectTab]: _removed, ...rest } = prev.projectImages;
+          return { ...prev, projectImages: rest };
+        });
+        setUploadMsg("삭제됐어요 ✓");
+      } else {
+        setUploadMsg("삭제 실패. 다시 시도해 주세요.");
+      }
+    } catch {
+      setUploadMsg("삭제 실패. 네트워크를 확인해 주세요.");
+    } finally {
+      setUploading(false);
+      setTimeout(() => setUploadMsg(""), 3000);
+    }
+  }
+
   // ─── login screen ──────────────────────────────────────────────────────────
   if (!loggedIn) {
     return (
@@ -379,13 +402,20 @@ export default function AdminPage() {
             {data.projectImages[projectTab] && (
               <img src={`/api/image/${projectTab}?v=${encodeURIComponent(data.projectImages[projectTab])}`} alt={`${projectTab} 대표 이미지`} style={{ width: "100%", maxHeight: "280px", objectFit: "cover", borderRadius: "10px", marginBottom: "16px", border: "1px solid #e5e7eb" }} />
             )}
-            <input
-              type="file"
-              accept="image/*"
-              disabled={uploading}
-              onChange={e => { const file = e.target.files?.[0]; if (file) handleImageUpload(file); }}
-              style={{ fontSize: "13px" }}
-            />
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <input
+                type="file"
+                accept="image/*"
+                disabled={uploading}
+                onChange={e => { const file = e.target.files?.[0]; if (file) handleImageUpload(file); }}
+                style={{ fontSize: "13px" }}
+              />
+              {data.projectImages[projectTab] && (
+                <button onClick={handleImageDelete} disabled={uploading} style={{ background: "none", border: "1px solid #ef4444", color: "#ef4444", borderRadius: "6px", padding: "6px 14px", fontSize: "12px", cursor: uploading ? "default" : "pointer", opacity: uploading ? 0.6 : 1 }}>
+                  이미지 삭제
+                </button>
+              )}
+            </div>
             {uploading && <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "8px" }}>업로드 중...</p>}
             {uploadMsg && <p style={{ fontSize: "12px", color: uploadMsg.includes("✓") ? "#059669" : "#ef4444", marginTop: "8px" }}>{uploadMsg}</p>}
           </div>

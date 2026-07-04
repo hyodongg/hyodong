@@ -1,4 +1,4 @@
-import { put, get } from "@vercel/blob";
+import { put, get, del } from "@vercel/blob";
 import type { PortfolioData } from "./types";
 import { DEFAULT_DATA } from "./defaultData";
 
@@ -36,6 +36,10 @@ export async function uploadProjectImage(key: string, file: File): Promise<strin
     addRandomSuffix: false,
   });
   return result.url;
+}
+
+export async function deleteProjectImage(blobUrl: string): Promise<void> {
+  await del(blobUrl);
 }
 
 export async function getProjectImageStream(

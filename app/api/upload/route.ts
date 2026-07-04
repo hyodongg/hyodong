@@ -1,6 +1,6 @@
 import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
-import { getPortfolioData, savePortfolioData, uploadProjectImage } from "@/lib/blob";
+import { deleteProjectImage, getPortfolioData, savePortfolioData, uploadProjectImage } from "@/lib/blob";
 
 export async function POST(request: Request) {
   if (!(await isAuthenticated())) {
@@ -23,4 +23,27 @@ export async function POST(request: Request) {
   revalidatePath("/");
 
   return Response.json({ url });
+}
+
+export async function DELETE(request: Request) {
+  if (!(await isAuthenticated())) {
+    return Response.json({ error: "인증이 필요해요" }, { status: 401 });
+  }
+
+  const { key } = await request.json();
+  if (typeof key !== "string" || !key) {
+    return Response.json({ error: "잘못된 요청이에요" }, { status: 400 });
+  }
+
+  const data = await getPortfolioData();
+  const url = data.projectImages[key];
+  if (url) {
+    await deleteProjectImage(url);
+    const { [key]: _removed, ...rest } = data.projectImages;
+    data.projectImages = rest;
+    await savePortfolioData(data);
+    revalidatePath("/");
+  }
+
+  return Response.json({ ok: true });
 }
