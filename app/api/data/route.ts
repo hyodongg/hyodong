@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getPortfolioData, savePortfolioData } from "@/lib/blob";
 
@@ -13,5 +14,6 @@ export async function PUT(request: Request) {
 
   const data = await request.json();
   await savePortfolioData(data);
+  revalidatePath("/");
   return Response.json({ ok: true });
 }
