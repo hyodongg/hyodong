@@ -200,11 +200,13 @@ export default function AdminPage() {
   const [loginError, setLoginError] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [data, setData] = useState<PortfolioData | null>(null);
-  const [tab, setTab] = useState<"troubles" | "stacks" | "projects" | "experiences">("troubles");
+  const [tab, setTab] = useState<"troubles" | "stacks" | "projects" | "experiences" | "images">("troubles");
   const [projectTab, setProjectTab] = useState<"CLUSTAR" | "NUNCHI">("CLUSTAR");
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState("");
   const [loading, setLoading] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadMsg, setUploadMsg] = useState("");
 
   const fetchData = useCallback(async () => {
     setLoading(true);
@@ -251,6 +253,29 @@ export default function AdminPage() {
     }
   }
 
+  async function handleImageUpload(file: File) {
+    setUploading(true);
+    setUploadMsg("");
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("key", projectTab);
+      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      if (res.ok) {
+        const { url } = await res.json();
+        setData(prev => prev && { ...prev, projectImages: { ...prev.projectImages, [projectTab]: url } });
+        setUploadMsg("업로드됐어요 ✓");
+      } else {
+        setUploadMsg("업로드 실패. 다시 시도해 주세요.");
+      }
+    } catch {
+      setUploadMsg("업로드 실패. 네트워크를 확인해 주세요.");
+    } finally {
+      setUploading(false);
+      setTimeout(() => setUploadMsg(""), 3000);
+    }
+  }
+
   // ─── login screen ──────────────────────────────────────────────────────────
   if (!loggedIn) {
     return (
@@ -281,6 +306,7 @@ export default function AdminPage() {
   const TABS = [
     { key: "troubles", label: "트러블슈팅" },
     { key: "stacks", label: "기술 스택 이유" },
+    { key: "images", label: "대표 이미지" },
     { key: "projects", label: "Other Projects" },
     { key: "experiences", label: "Experiences" },
   ] as const;
@@ -339,6 +365,29 @@ export default function AdminPage() {
               items={data.stackReasons[projectTab] ?? []}
               onChange={v => setData({ ...data, stackReasons: { ...data.stackReasons, [projectTab]: v } })}
             />
+          </div>
+        )}
+
+        {/* images tab */}
+        {tab === "images" && (
+          <div>
+            <div style={{ display: "flex", gap: "8px", marginBottom: "20px" }}>
+              {(["CLUSTAR", "NUNCHI"] as const).map(pk => (
+                <button key={pk} onClick={() => setProjectTab(pk)} style={{ padding: "6px 16px", border: "1px solid #e5e7eb", borderRadius: "6px", fontSize: "13px", fontWeight: projectTab === pk ? 700 : 400, background: projectTab === pk ? "#111827" : "#fff", color: projectTab === pk ? "#fff" : "#374151", cursor: "pointer" }}>{pk}</button>
+              ))}
+            </div>
+            {data.projectImages[projectTab] && (
+              <img src={data.projectImages[projectTab]} alt={`${projectTab} 대표 이미지`} style={{ width: "100%", maxHeight: "280px", objectFit: "cover", borderRadius: "10px", marginBottom: "16px", border: "1px solid #e5e7eb" }} />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              disabled={uploading}
+              onChange={e => { const file = e.target.files?.[0]; if (file) handleImageUpload(file); }}
+              style={{ fontSize: "13px" }}
+            />
+            {uploading && <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "8px" }}>업로드 중...</p>}
+            {uploadMsg && <p style={{ fontSize: "12px", color: uploadMsg.includes("✓") ? "#059669" : "#ef4444", marginTop: "8px" }}>{uploadMsg}</p>}
           </div>
         )}
 

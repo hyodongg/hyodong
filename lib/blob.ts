@@ -13,7 +13,8 @@ export async function getPortfolioData(): Promise<PortfolioData> {
     if (!result || !result.stream) return DEFAULT_DATA;
 
     const text = await new Response(result.stream).text();
-    return JSON.parse(text) as PortfolioData;
+    const parsed = JSON.parse(text) as Partial<PortfolioData>;
+    return { ...DEFAULT_DATA, ...parsed };
   } catch {
     return DEFAULT_DATA;
   }
@@ -26,4 +27,13 @@ export async function savePortfolioData(data: PortfolioData): Promise<void> {
     addRandomSuffix: false,
     allowOverwrite: true,
   });
+}
+
+export async function uploadProjectImage(key: string, file: File): Promise<string> {
+  const result = await put(`portfolio/images/${key}-${Date.now()}-${file.name}`, file, {
+    access: "public",
+    contentType: file.type || undefined,
+    addRandomSuffix: false,
+  });
+  return result.url;
 }

@@ -83,6 +83,29 @@ function StackReasonModal({ projectName, stacks, onClose }: { projectName: strin
   );
 }
 
+function ImageLightbox({ src, alt, onClose }: { src: string; alt: string; onClose: () => void }) {
+  return (
+    <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.75)", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
+      <img src={src} alt={alt} onClick={(e) => e.stopPropagation()} style={{ maxWidth: "90vw", maxHeight: "90vh", borderRadius: "12px", boxShadow: "0 32px 80px rgba(0,0,0,0.4)" }} />
+    </div>
+  );
+}
+
+function ProjectThumbnail({ src, alt }: { src: string; alt: string }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <img
+        src={src}
+        alt={alt}
+        onClick={() => setOpen(true)}
+        style={{ width: "56px", height: "56px", objectFit: "cover", borderRadius: "8px", cursor: "pointer", flexShrink: 0 }}
+      />
+      {open && <ImageLightbox src={src} alt={alt} onClose={() => setOpen(false)} />}
+    </>
+  );
+}
+
 function TroubleRow({ item, projectName }: { item: TroubleItem; projectName: string }) {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -116,7 +139,7 @@ function StackReasonButton({ projectKey, projectName, stackReasons }: { projectK
 
 export default function PortfolioClient({ data }: { data: PortfolioData }) {
   const [menuOpen, setMenuOpen] = useState(false);
-  const { troubles, stackReasons, otherProjects, experiences } = data;
+  const { troubles, stackReasons, otherProjects, experiences, projectImages } = data;
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -273,6 +296,7 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
             <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  {projectImages.CLUSTAR && <ProjectThumbnail src={projectImages.CLUSTAR} alt="CLUSTAR 대표 이미지" />}
                   <h3 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>CLUSTAR</h3>
                   <span style={{ fontSize: "11px", fontWeight: 700, background: "#fef3c7", color: "#d97706", padding: "2px 8px", borderRadius: "20px" }}>SOPT</span>
                 </div>
@@ -315,6 +339,7 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
             <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  {projectImages.NUNCHI && <ProjectThumbnail src={projectImages.NUNCHI} alt="NUNCHI 대표 이미지" />}
                   <h3 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>NUNCHI</h3>
                   <span style={{ fontSize: "11px", fontWeight: 700, background: "#ede9fe", color: "#7c3aed", padding: "2px 8px", borderRadius: "20px" }}>캡스톤디자인</span>
                 </div>

@@ -37,4 +37,5 @@ export type PortfolioData = {
   stackReasons: Record<string, StackReason[]>;
   otherProjects: OtherProject[];
   experiences: ExperienceGroup[];
+  projectImages: Record<string, string>;
 };

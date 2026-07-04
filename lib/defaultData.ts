@@ -233,4 +233,5 @@ export const DEFAULT_DATA: PortfolioData = {
       ],
     },
   ],
+  projectImages: {},
 };
