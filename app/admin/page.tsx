@@ -155,18 +155,42 @@ function ProjectsEditor({ items, onChange }: { items: OtherProject[]; onChange: 
   );
 }
 
+function emptyExpGroup(): ExperienceGroup {
+  return { category: "", color: "#6b7280", items: [] };
+}
+
 function ExperiencesEditor({ groups, onChange }: { groups: ExperienceGroup[]; onChange: (v: ExperienceGroup[]) => void }) {
-  const [expanded, setExpanded] = useState<string | null>(null);
+  const [expanded, setExpanded] = useState<number | null>(null);
   const updateGroup = (i: number, patch: Partial<ExperienceGroup>) => onChange(groups.map((g, j) => j === i ? { ...g, ...patch } : g));
+
+  function moveGroup(i: number, dir: -1 | 1) {
+    const j = i + dir;
+    if (j < 0 || j >= groups.length) return;
+    const next = [...groups];
+    [next[i], next[j]] = [next[j], next[i]];
+    onChange(next);
+    setExpanded(expanded === i ? j : expanded === j ? i : expanded);
+  }
+
+  function removeGroup(i: number) {
+    onChange(groups.filter((_, j) => j !== i));
+    setExpanded(null);
+  }
+
   return (
     <div>
       {groups.map((group, gi) => (
         <div key={gi} style={{ border: "1px solid #e5e7eb", borderRadius: "8px", marginBottom: "8px" }}>
-          <div onClick={() => setExpanded(expanded === group.category ? null : group.category)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", cursor: "pointer", background: expanded === group.category ? "#f9fafb" : "#fff", borderRadius: "8px" }}>
-            <span style={{ fontSize: "13px", fontWeight: 600, color: group.color }}>{group.category}</span>
-            <span style={{ color: "#9ca3af", fontSize: "12px" }}>{expanded === group.category ? "▲" : "▼"}</span>
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 14px", cursor: "pointer", background: expanded === gi ? "#f9fafb" : "#fff", borderRadius: "8px" }}>
+            <span onClick={() => setExpanded(expanded === gi ? null : gi)} style={{ fontSize: "13px", fontWeight: 600, color: group.color, flex: 1 }}>{group.category || "(이름 없는 카테고리)"}</span>
+            <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
+              <button onClick={() => moveGroup(gi, -1)} disabled={gi === 0} style={{ fontSize: "12px", color: gi === 0 ? "#d1d5db" : "#6b7280", background: "none", border: "none", cursor: gi === 0 ? "default" : "pointer" }}>▲</button>
+              <button onClick={() => moveGroup(gi, 1)} disabled={gi === groups.length - 1} style={{ fontSize: "12px", color: gi === groups.length - 1 ? "#d1d5db" : "#6b7280", background: "none", border: "none", cursor: gi === groups.length - 1 ? "default" : "pointer" }}>▼</button>
+              <button onClick={() => removeGroup(gi)} style={{ fontSize: "12px", color: "#ef4444", background: "none", border: "none", cursor: "pointer" }}>카테고리 삭제</button>
+              <span onClick={() => setExpanded(expanded === gi ? null : gi)} style={{ color: "#9ca3af", fontSize: "12px" }}>{expanded === gi ? "▲" : "▼"}</span>
+            </div>
           </div>
-          {expanded === group.category && (
+          {expanded === gi && (
             <div style={{ padding: "12px 14px", borderTop: "1px solid #f3f4f6" }}>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "8px", marginBottom: "12px" }}>
                 <Field label="카테고리명" value={group.category} onChange={v => updateGroup(gi, { category: v })} />
@@ -189,6 +213,7 @@ function ExperiencesEditor({ groups, onChange }: { groups: ExperienceGroup[]; on
           )}
         </div>
       ))}
+      <button onClick={() => onChange([...groups, emptyExpGroup()])} style={{ fontSize: "13px", color: "#3b82f6", background: "none", border: "1px dashed #93c5fd", borderRadius: "8px", padding: "8px 14px", cursor: "pointer", width: "100%" }}>+ 카테고리 추가</button>
     </div>
   );
 }

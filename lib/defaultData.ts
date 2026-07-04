@@ -182,6 +182,13 @@ export const DEFAULT_DATA: PortfolioData = {
   ],
   experiences: [
     {
+      category: "학력",
+      color: "#0ea5e9",
+      items: [
+        { title: "동국대학교 컴퓨터정보통신공학부 정보통신공학과", period: "", desc: "전체 학점 4.18/4.5, 전공 학점 4.23/4.5" },
+      ],
+    },
+    {
       category: "동아리",
       color: "#3b82f6",
       items: [
@@ -230,6 +237,13 @@ export const DEFAULT_DATA: PortfolioData = {
         { title: "리눅스마스터 2급", period: "2024.10.04", desc: "" },
         { title: "AWS Certified Cloud Practitioner", period: "2025.11.06", desc: "" },
         { title: "정보처리기사", period: "2026.06.12", desc: "" },
+      ],
+    },
+    {
+      category: "어학",
+      color: "#14b8a6",
+      items: [
+        { title: "토익스피킹 IH (150)", period: "", desc: "" },
       ],
     },
   ],
