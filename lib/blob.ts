@@ -31,9 +31,21 @@ export async function savePortfolioData(data: PortfolioData): Promise<void> {
 
 export async function uploadProjectImage(key: string, file: File): Promise<string> {
   const result = await put(`portfolio/images/${key}-${Date.now()}-${file.name}`, file, {
-    access: "public",
+    access: "private",
     contentType: file.type || undefined,
     addRandomSuffix: false,
   });
   return result.url;
+}
+
+export async function getProjectImageStream(
+  blobUrl: string
+): Promise<{ stream: ReadableStream; contentType: string } | null> {
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (!token) return null;
+
+  const result = await get(blobUrl, { access: "private", token });
+  if (!result || !result.stream) return null;
+
+  return { stream: result.stream, contentType: result.blob.contentType };
 }

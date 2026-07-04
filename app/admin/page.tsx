@@ -377,7 +377,7 @@ export default function AdminPage() {
               ))}
             </div>
             {data.projectImages[projectTab] && (
-              <img src={data.projectImages[projectTab]} alt={`${projectTab} 대표 이미지`} style={{ width: "100%", maxHeight: "280px", objectFit: "cover", borderRadius: "10px", marginBottom: "16px", border: "1px solid #e5e7eb" }} />
+              <img src={`/api/image/${projectTab}?v=${encodeURIComponent(data.projectImages[projectTab])}`} alt={`${projectTab} 대표 이미지`} style={{ width: "100%", maxHeight: "280px", objectFit: "cover", borderRadius: "10px", marginBottom: "16px", border: "1px solid #e5e7eb" }} />
             )}
             <input
               type="file"

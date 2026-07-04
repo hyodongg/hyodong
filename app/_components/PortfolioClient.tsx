@@ -296,7 +296,7 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
             <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  {projectImages.CLUSTAR && <ProjectThumbnail src={projectImages.CLUSTAR} alt="CLUSTAR 대표 이미지" />}
+                  {projectImages.CLUSTAR && <ProjectThumbnail src={`/api/image/CLUSTAR?v=${encodeURIComponent(projectImages.CLUSTAR)}`} alt="CLUSTAR 대표 이미지" />}
                   <h3 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>CLUSTAR</h3>
                   <span style={{ fontSize: "11px", fontWeight: 700, background: "#fef3c7", color: "#d97706", padding: "2px 8px", borderRadius: "20px" }}>SOPT</span>
                 </div>
@@ -339,7 +339,7 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
             <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  {projectImages.NUNCHI && <ProjectThumbnail src={projectImages.NUNCHI} alt="NUNCHI 대표 이미지" />}
+                  {projectImages.NUNCHI && <ProjectThumbnail src={`/api/image/NUNCHI?v=${encodeURIComponent(projectImages.NUNCHI)}`} alt="NUNCHI 대표 이미지" />}
                   <h3 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>NUNCHI</h3>
                   <span style={{ fontSize: "11px", fontWeight: 700, background: "#ede9fe", color: "#7c3aed", padding: "2px 8px", borderRadius: "20px" }}>캡스톤디자인</span>
                 </div>
