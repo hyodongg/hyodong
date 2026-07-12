@@ -183,7 +183,7 @@ export const DEFAULT_DATA: PortfolioData = {
   experiences: [
     {
       category: "학력",
-      color: "#0ea5e9",
+      color: "#ec4899",
       items: [
         { title: "동국대학교 컴퓨터정보통신공학부 정보통신공학과", period: "", desc: "전체 학점 4.18/4.5, 전공 학점 4.23/4.5" },
       ],
@@ -241,7 +241,7 @@ export const DEFAULT_DATA: PortfolioData = {
     },
     {
       category: "어학",
-      color: "#14b8a6",
+      color: "#4d7c0f",
       items: [
         { title: "토익스피킹 IH (150)", period: "", desc: "" },
       ],

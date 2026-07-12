@@ -6,8 +6,8 @@ import type { PortfolioData, TroubleItem, StackReason } from "@/lib/types";
 const NAV_ITEMS = [
   { href: "#home", label: "Home" },
   { href: "#about", label: "About" },
-  { href: "#skills", label: "Skills" },
   { href: "#projects", label: "Projects" },
+  { href: "#skills", label: "Skills" },
   { href: "#experiences", label: "Experiences" },
 ];
 
@@ -228,6 +228,127 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
           </div>
         </section>
 
+        {/* PROJECTS */}
+        <section id="projects" style={{ padding: "80px 60px", background: "#fff" }}>
+          <h2 style={{ fontSize: "28px", fontWeight: 700, marginBottom: "8px" }}>Projects</h2>
+          <div style={{ width: "40px", height: "3px", background: "#3b82f6", marginBottom: "32px" }} />
+          <div style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
+
+            {/* CLUSTAR */}
+            <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  {projectImages.CLUSTAR && <ProjectThumbnail src={`/api/image/CLUSTAR?v=${encodeURIComponent(projectImages.CLUSTAR)}`} alt="CLUSTAR 대표 이미지" />}
+                  <h3 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>CLUSTAR</h3>
+                  <span style={{ fontSize: "11px", fontWeight: 700, background: "#fef3c7", color: "#d97706", padding: "2px 8px", borderRadius: "20px" }}>SOPT</span>
+                </div>
+                <span style={{ fontSize: "12px", color: "#9ca3af", flexShrink: 0, marginLeft: "16px", paddingTop: "3px" }}>2026.01 ~ 진행중</span>
+              </div>
+              <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "20px", marginTop: "6px" }}>
+                흩어진 메모를 빛나는 결과물로.<br />
+                AI가 메모를 구조화, 요약해주고, 검색과 유사 메모 추천까지 도와주는 Spring AI + RAG 기반 메모 정리 서비스입니다.
+              </p>
+              <div style={{ display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" }}>
+                <a href="https://github.com/TEAM-CLUSTAR/CLUSTAR-SERVER" target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>GitHub →</a>
+              </div>
+              <p style={{ fontSize: "13px", fontWeight: 700, color: "#3b82f6", marginBottom: "10px" }}>내가 기여한 일</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                {[
+                  { category: "AI 핵심 기능 (RAG)", items: ["Spring AI + RAG 기반 AI 메모 생성 시스템 설계 및 구현", "검색 품질 향상을 위한, 문서 청킹 · 임베딩 · 벡터 검색으로 이어지는 ETL 파이프라인 설계 및 최적화", "AI 채팅 호출 실패 시 최대 3회 자동 재시도, 모두 실패하면 실패 기록을 남겨 장애 대응 체계 구축", "Resilience4j와 직접 구현 방식의 장단점을 비교 분석 후 retry 방식으로 결정", "시스템 프롬프트 반복 고도화로 생성 품질 개선"] },
+                  { category: "테스트 & 안정성", items: ["Repository · Service · Controller 계층별 단위 테스트 작성", "nGrinder 성능 테스트를 위한 전용 프로파일 구성 — 로깅 등 운영 오버헤드를 줄이고 Prometheus로 응답시간·에러율 측정", "메모 삭제 시 DB-S3 간 데이터 불일치 문제를 이벤트 기반 처리로 해결"] },
+                  { category: "CI/CD", items: ["GitHub Actions 기반 CI/CD 파이프라인 구축", "PR merge → Jib기반 이미지 빌드 & ECR 푸시 → EC2 SSH 접속 → Blue-Green 컨테이너 교체 → 헬스체크 통과 시 트래픽 전환 / 실패 시 자동 롤백"] },
+                  { category: "파일 · 이미지 처리", items: ["첨부가 무제한이면 스토리지 비용을 예측하기 어려워질 수 있다는 생각에 파일·이미지 용량 및 개수 제한 로직 구현", "Apache Tika 파싱 실패(손상·암호화 파일 등) 시 해당 파일만 건너뛰도록 예외처리해 임베딩 파이프라인 안정성 확보", "File · Image · Text Document 간 메타데이터 키 구조 통일로 RAG 파이프라인 일관성 확보"] },
+                  { category: "메모 관련 API", items: ["RESTful한 메모 CRUD API 구현", "RESTful한 AI 메모 생성, 조회 API 구현", "메모 가공용 유틸(마크다운 문법 제거 등) 개발로 정리된 메모의 가독성과 일관성 개선"] },
+                ].map((group) => (
+                  <div key={group.category}>
+                    <p style={{ fontSize: "13px", fontWeight: 700, color: "#111827", marginBottom: "6px" }}>{group.category}</p>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0, color: "#4b5563", fontSize: "13px", lineHeight: 1.9 }}>
+                      {group.items.map((item) => <li key={item} style={{ paddingLeft: "12px" }}>· {item}</li>)}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: "#f3f4f6", borderRadius: "10px", padding: "16px 20px", marginTop: "20px" }}>
+                <p style={{ fontSize: "11px", fontWeight: 700, color: "#f60101", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" }}>Trouble Shooting</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  {(troubles.CLUSTAR ?? []).map((t) => <TroubleRow key={t.title} item={t} projectName="CLUSTAR" />)}
+                </div>
+              </div>
+              <div style={{ marginTop: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
+                <p style={{ fontSize: "12px", color: "#9ca3af", margin: 0 }}>Spring Boot · Spring AI · QueryDSL · PostgreSQL (pgvector) · Redis · AWS S3 · GitHub Actions · GCP</p>
+                <StackReasonButton projectKey="CLUSTAR" projectName="CLUSTAR" stackReasons={stackReasons} />
+              </div>
+            </div>
+
+            {/* NUNCHI */}
+            <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                  {projectImages.NUNCHI && <ProjectThumbnail src={`/api/image/NUNCHI?v=${encodeURIComponent(projectImages.NUNCHI)}`} alt="NUNCHI 대표 이미지" />}
+                  <h3 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>NUNCHI</h3>
+                  <span style={{ fontSize: "11px", fontWeight: 700, background: "#ede9fe", color: "#7c3aed", padding: "2px 8px", borderRadius: "20px" }}>캡스톤디자인</span>
+                </div>
+                <span style={{ fontSize: "12px", color: "#9ca3af", flexShrink: 0, marginLeft: "16px", paddingTop: "3px" }}>2026.03 ~ 2026.06</span>
+              </div>
+              <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "20px", marginTop: "6px" }}>
+                말 한마디로 주문 완료.<br />
+                MCP 기반 LLM Agentic AI가 음성 대화만으로 메뉴 선택부터 결제까지 처리하는 배리어프리 자율주문 키오스크 서비스입니다.
+              </p>
+              <div style={{ display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" }}>
+                <a href="https://github.com/CapstoneDgu/NUNCHI-AI" target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>AI Server GitHub →</a>
+                <a href="https://github.com/CapstoneDgu/NUNCHI" target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>Backend GitHub →</a>
+              </div>
+              <p style={{ fontSize: "13px", fontWeight: 700, color: "#3b82f6", marginBottom: "10px" }}>내가 기여한 일</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
+                {[
+                  { category: "인프라", items: ["Docker - FastAPI AI 서버 · MCP 서버 · Spring 서버를 별도 컨테이너로 분리해 멀티 서비스 구성"] },
+                  { category: "AI 응답 품질 & 안정성", items: ["장바구니 담기 락 충돌 발생 시 짧은 대기 후 자동 재시도 로직 구현으로 동시 요청 안정성 확보", "LLM이 실제로 담기지 않은 메뉴를 담았다고 보고하는 환각을 코드 레벨에서 검증·교정하는 가드 구현 — Tool 호출 결과와 최종 응답을 대조해 불일치 시 정정", "의도 분류기 개선 — 직전 AI 메시지 맥락을 분류 입력에 함께 전달해 \"네\", \"응\" 같은 짧은 응답의 오분류율 감소", "메뉴·가격 환각 방지 — LLM 응답을 Spring API 조회 결과로만 생성하도록 프롬프트·Tool 흐름 강제", "응답 latency 3초 이내 목표로 불필요한 Tool 호출 제거 및 처리 단계별 타이밍 로깅 추가"] },
+                  { category: "AI 에이전트 아키텍처 설계 (Python · FastAPI)", items: ["FastAPI 기반 AI 서버 전체 설계 및 구현", "LangGraph 상태 기반 주문 에이전트 설계 — 대화 맥락을 유지하는 상태 전이 구조", "LLM 팩토리 설계로 OpenAI/Gemini 멀티 LLM 공급자 전환 지원", "일반 모드/아바타 모드별 행동 지침 블록을 분리해 동일 에이전트가 두 가지 UX(터치 보조 / 음성 대화 주도)를 모두 처리하도록 프롬프트 구조 리팩토링"] },
+                  { category: "MCP 기반 시스템 제어", items: ["FastMCP로 키오스크 도메인 전용 MCP 서버 구현", "LangChain MCP 어댑터로 LangGraph 에이전트에 바인딩", "AI가 메뉴 조회, 장바구니 조작, 주문 확정, 결제처리까지 직접 수행하는 구조 설계"] },
+                  { category: "백엔드 서버 (Java · Spring Boot)", items: ["키오스크 기능에 필요한 API 개발", "JPA Specification을 이용한 동적 필터링 구현 — QueryDSL 의존성 추가 없이 다중 선택 조건을 조합 처리"] },
+                ].map((group) => (
+                  <div key={group.category}>
+                    <p style={{ fontSize: "13px", fontWeight: 700, color: "#111827", marginBottom: "6px" }}>{group.category}</p>
+                    <ul style={{ listStyle: "none", padding: 0, margin: 0, color: "#4b5563", fontSize: "13px", lineHeight: 1.9 }}>
+                      {group.items.map((item) => <li key={item} style={{ paddingLeft: "12px" }}>· {item}</li>)}
+                    </ul>
+                  </div>
+                ))}
+              </div>
+              <div style={{ background: "#f3f4f6", borderRadius: "10px", padding: "16px 20px", marginTop: "20px" }}>
+                <p style={{ fontSize: "11px", fontWeight: 700, color: "#f60101", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" }}>Trouble Shooting</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                  {(troubles.NUNCHI ?? []).map((t) => <TroubleRow key={t.title} item={t} projectName="NUNCHI" />)}
+                </div>
+              </div>
+              <div style={{ marginTop: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
+                <p style={{ fontSize: "12px", color: "#9ca3af", margin: 0 }}>FastAPI · LangGraph · FastMCP · Spring Boot · PostgreSQL · Redis · Docker · Nginx · AWS EC2</p>
+                <StackReasonButton projectKey="NUNCHI" projectName="NUNCHI" stackReasons={stackReasons} />
+              </div>
+            </div>
+          </div>
+
+          {/* Other Projects */}
+          <div style={{ marginTop: "48px" }}>
+            <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: "#9ca3af", textTransform: "uppercase", marginBottom: "16px" }}>Other Projects</p>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px" }}>
+              {otherProjects.map((p) => (
+                <div key={p.name} style={{ display: "flex", flexDirection: "column", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "20px 22px", background: "#fff" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
+                    <h4 style={{ fontSize: "15px", fontWeight: 700, margin: 0 }}>{p.emoji} {p.name}</h4>
+                    <span style={{ fontSize: "11px", color: "#9ca3af", flexShrink: 0, paddingTop: "2px" }}>{p.period}</span>
+                  </div>
+                  <p style={{ color: "#6b7280", fontSize: "13px", lineHeight: 1.6, margin: "8px 0 10px" }}>{p.description}</p>
+                  <p style={{ fontSize: "12px", color: "#9ca3af", margin: "4px 0 12px", lineHeight: 1.6 }}>{p.stack}</p>
+                  <div style={{ display: "flex", gap: "12px", marginTop: "auto" }}>
+                    {p.links.map((l) => <a key={l.href} href={l.href} target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>{l.label} →</a>)}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
         {/* SKILLS */}
         <section id="skills" style={{ padding: "80px 60px", background: "#f9fafb" }}>
           <h2 style={{ fontSize: "28px", fontWeight: 700, marginBottom: "8px" }}>Skills</h2>
@@ -284,121 +405,6 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
               </div>
             </div>
           ))}
-        </section>
-
-        {/* PROJECTS */}
-        <section id="projects" style={{ padding: "80px 60px", background: "#fff" }}>
-          <h2 style={{ fontSize: "28px", fontWeight: 700, marginBottom: "8px" }}>Projects</h2>
-          <div style={{ width: "40px", height: "3px", background: "#3b82f6", marginBottom: "32px" }} />
-          <div style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
-
-            {/* CLUSTAR */}
-            <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  {projectImages.CLUSTAR && <ProjectThumbnail src={`/api/image/CLUSTAR?v=${encodeURIComponent(projectImages.CLUSTAR)}`} alt="CLUSTAR 대표 이미지" />}
-                  <h3 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>CLUSTAR</h3>
-                  <span style={{ fontSize: "11px", fontWeight: 700, background: "#fef3c7", color: "#d97706", padding: "2px 8px", borderRadius: "20px" }}>SOPT</span>
-                </div>
-                <span style={{ fontSize: "12px", color: "#9ca3af", flexShrink: 0, marginLeft: "16px", paddingTop: "3px" }}>2026.01 ~ 진행중</span>
-              </div>
-              <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "20px", marginTop: "6px" }}>흩어진 메모를 빛나는 결과물로 — Spring AI + RAG 기반 AI 메모 정리 및 구조화 서비스</p>
-              <div style={{ display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" }}>
-                <a href="https://github.com/TEAM-CLUSTAR/CLUSTAR-SERVER" target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>GitHub →</a>
-              </div>
-              <p style={{ fontSize: "13px", fontWeight: 700, color: "#3b82f6", marginBottom: "10px" }}>내가 기여한 일</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                {[
-                  { category: "AI 핵심 기능 (RAG)", items: ["Spring AI + RAG 기반 AI 메모 생성 시스템 설계 및 구현", "검색 품질 향상을 위한, 문서 청킹 · 임베딩 · 벡터 검색으로 이어지는 ETL 파이프라인 설계 및 최적화", "AI 채팅 호출 실패 시 최대 3회 자동 재시도, 모두 실패하면 실패 기록을 남겨 장애 대응 체계 구축", "Resilience4j와 직접 구현 방식의 장단점을 비교 분석 후 retry 방식으로 결정", "시스템 프롬프트 반복 고도화로 생성 품질 개선"] },
-                  { category: "테스트 & 안정성", items: ["Repository · Service · Controller 계층별 단위 테스트 작성", "nGrinder 성능 테스트를 위한 전용 프로파일 구성 — 로깅 등 운영 오버헤드를 줄이고 Prometheus로 응답시간·에러율 측정", "메모 삭제 시 DB-S3 간 데이터 불일치 문제를 이벤트 기반 처리로 해결"] },
-                  { category: "CI/CD", items: ["GitHub Actions 기반 CI/CD 파이프라인 구축", "PR merge → Jib기반 이미지 빌드 & ECR 푸시 → EC2 SSH 접속 → Blue-Green 컨테이너 교체 → 헬스체크 통과 시 트래픽 전환 / 실패 시 자동 롤백"] },
-                  { category: "파일 · 이미지 처리", items: ["첨부가 무제한이면 스토리지 비용을 예측하기 어려워질 수 있다는 생각에 파일·이미지 용량 및 개수 제한 로직 구현", "Apache Tika 파싱 실패(손상·암호화 파일 등) 시 해당 파일만 건너뛰도록 예외처리해 임베딩 파이프라인 안정성 확보", "File · Image · Text Document 간 메타데이터 키 구조 통일로 RAG 파이프라인 일관성 확보"] },
-                  { category: "메모 관련 API", items: ["RESTful한 메모 CRUD API 구현", "RESTful한 AI 메모 생성, 조회 API 구현", "메모 가공용 유틸(마크다운 문법 제거 등) 개발로 정리된 메모의 가독성과 일관성 개선"] },
-                ].map((group) => (
-                  <div key={group.category}>
-                    <p style={{ fontSize: "13px", fontWeight: 700, color: "#111827", marginBottom: "6px" }}>{group.category}</p>
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0, color: "#4b5563", fontSize: "13px", lineHeight: 1.9 }}>
-                      {group.items.map((item) => <li key={item} style={{ paddingLeft: "12px" }}>· {item}</li>)}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-              <div style={{ background: "#f3f4f6", borderRadius: "10px", padding: "16px 20px", marginTop: "20px" }}>
-                <p style={{ fontSize: "11px", fontWeight: 700, color: "#f60101", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" }}>Trouble Shooting</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  {(troubles.CLUSTAR ?? []).map((t) => <TroubleRow key={t.title} item={t} projectName="CLUSTAR" />)}
-                </div>
-              </div>
-              <div style={{ marginTop: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
-                <p style={{ fontSize: "12px", color: "#9ca3af", margin: 0 }}>Spring Boot · Spring AI · QueryDSL · PostgreSQL (pgvector) · Redis · AWS S3 · GitHub Actions · GCP</p>
-                <StackReasonButton projectKey="CLUSTAR" projectName="CLUSTAR" stackReasons={stackReasons} />
-              </div>
-            </div>
-
-            {/* NUNCHI */}
-            <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "6px" }}>
-                <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-                  {projectImages.NUNCHI && <ProjectThumbnail src={`/api/image/NUNCHI?v=${encodeURIComponent(projectImages.NUNCHI)}`} alt="NUNCHI 대표 이미지" />}
-                  <h3 style={{ fontSize: "20px", fontWeight: 700, margin: 0 }}>NUNCHI</h3>
-                  <span style={{ fontSize: "11px", fontWeight: 700, background: "#ede9fe", color: "#7c3aed", padding: "2px 8px", borderRadius: "20px" }}>캡스톤디자인</span>
-                </div>
-                <span style={{ fontSize: "12px", color: "#9ca3af", flexShrink: 0, marginLeft: "16px", paddingTop: "3px" }}>2026.03 ~ 2026.06</span>
-              </div>
-              <p style={{ color: "#6b7280", fontSize: "14px", marginBottom: "20px", marginTop: "6px" }}>말 한마디로 주문 완료 — MCP 기반 LLM Agentic AI 음성 배리어프리 자율주문 키오스크</p>
-              <div style={{ display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" }}>
-                <a href="https://github.com/CapstoneDgu/NUNCHI-AI" target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>AI Server GitHub →</a>
-                <a href="https://github.com/CapstoneDgu/NUNCHI" target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>Backend GitHub →</a>
-              </div>
-              <p style={{ fontSize: "13px", fontWeight: 700, color: "#3b82f6", marginBottom: "10px" }}>내가 기여한 일</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
-                {[
-                  { category: "인프라", items: ["Docker - FastAPI AI 서버 · MCP 서버 · Spring 서버를 별도 컨테이너로 분리해 멀티 서비스 구성"] },
-                  { category: "AI 응답 품질 & 안정성", items: ["장바구니 담기 락 충돌 발생 시 짧은 대기 후 자동 재시도 로직 구현으로 동시 요청 안정성 확보", "LLM이 실제로 담기지 않은 메뉴를 담았다고 보고하는 환각을 코드 레벨에서 검증·교정하는 가드 구현 — Tool 호출 결과와 최종 응답을 대조해 불일치 시 정정", "의도 분류기 개선 — 직전 AI 메시지 맥락을 분류 입력에 함께 전달해 \"네\", \"응\" 같은 짧은 응답의 오분류율 감소", "메뉴·가격 환각 방지 — LLM 응답을 Spring API 조회 결과로만 생성하도록 프롬프트·Tool 흐름 강제", "응답 latency 3초 이내 목표로 불필요한 Tool 호출 제거 및 처리 단계별 타이밍 로깅 추가"] },
-                  { category: "AI 에이전트 아키텍처 설계 (Python · FastAPI)", items: ["FastAPI 기반 AI 서버 전체 설계 및 구현", "LangGraph 상태 기반 주문 에이전트 설계 — 대화 맥락을 유지하는 상태 전이 구조", "LLM 팩토리 설계로 OpenAI/Gemini 멀티 LLM 공급자 전환 지원", "일반 모드/아바타 모드별 행동 지침 블록을 분리해 동일 에이전트가 두 가지 UX(터치 보조 / 음성 대화 주도)를 모두 처리하도록 프롬프트 구조 리팩토링"] },
-                  { category: "MCP 기반 시스템 제어", items: ["FastMCP로 키오스크 도메인 전용 MCP 서버 구현", "LangChain MCP 어댑터로 LangGraph 에이전트에 바인딩", "AI가 메뉴 조회, 장바구니 조작, 주문 확정, 결제처리까지 직접 수행하는 구조 설계"] },
-                  { category: "백엔드 서버 (Java · Spring Boot)", items: ["키오스크 기능에 필요한 API 개발", "JPA Specification을 이용한 동적 필터링 구현 — QueryDSL 의존성 추가 없이 다중 선택 조건을 조합 처리"] },
-                ].map((group) => (
-                  <div key={group.category}>
-                    <p style={{ fontSize: "13px", fontWeight: 700, color: "#111827", marginBottom: "6px" }}>{group.category}</p>
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0, color: "#4b5563", fontSize: "13px", lineHeight: 1.9 }}>
-                      {group.items.map((item) => <li key={item} style={{ paddingLeft: "12px" }}>· {item}</li>)}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-              <div style={{ background: "#f3f4f6", borderRadius: "10px", padding: "16px 20px", marginTop: "20px" }}>
-                <p style={{ fontSize: "11px", fontWeight: 700, color: "#f60101", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" }}>Trouble Shooting</p>
-                <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                  {(troubles.NUNCHI ?? []).map((t) => <TroubleRow key={t.title} item={t} projectName="NUNCHI" />)}
-                </div>
-              </div>
-              <div style={{ marginTop: "16px", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: "8px" }}>
-                <p style={{ fontSize: "12px", color: "#9ca3af", margin: 0 }}>FastAPI · LangGraph · FastMCP · Spring Boot · PostgreSQL · Redis · Docker · Nginx · AWS EC2</p>
-                <StackReasonButton projectKey="NUNCHI" projectName="NUNCHI" stackReasons={stackReasons} />
-              </div>
-            </div>
-          </div>
-
-          {/* Other Projects */}
-          <div style={{ marginTop: "48px" }}>
-            <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: "#9ca3af", textTransform: "uppercase", marginBottom: "16px" }}>Other Projects</p>
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px" }}>
-              {otherProjects.map((p) => (
-                <div key={p.name} style={{ display: "flex", flexDirection: "column", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "20px 22px", background: "#fff" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
-                    <h4 style={{ fontSize: "15px", fontWeight: 700, margin: 0 }}>{p.emoji} {p.name}</h4>
-                    <span style={{ fontSize: "11px", color: "#9ca3af", flexShrink: 0, paddingTop: "2px" }}>{p.period}</span>
-                  </div>
-                  <p style={{ color: "#6b7280", fontSize: "13px", lineHeight: 1.6, margin: "8px 0 10px" }}>{p.description}</p>
-                  <p style={{ fontSize: "12px", color: "#9ca3af", margin: "4px 0 12px", lineHeight: 1.6 }}>{p.stack}</p>
-                  <div style={{ display: "flex", gap: "12px", marginTop: "auto" }}>
-                    {p.links.map((l) => <a key={l.href} href={l.href} target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>{l.label} →</a>)}
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
         </section>
 
         {/* EXPERIENCES */}
