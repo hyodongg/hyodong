@@ -250,6 +250,7 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
               </p>
               <div style={{ display: "flex", gap: "12px", marginBottom: "20px", flexWrap: "wrap" }}>
                 <a href="https://github.com/TEAM-CLUSTAR/CLUSTAR-SERVER" target="_blank" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>GitHub →</a>
+                <a href="https://www.clustar.cloud/landing" target="_blank" rel="noopener noreferrer" style={{ fontSize: "12px", color: "#3b82f6", textDecoration: "none" }}>서비스 바로가기 →</a>
               </div>
               <p style={{ fontSize: "13px", fontWeight: 700, color: "#3b82f6", marginBottom: "10px" }}>내가 기여한 일</p>
               <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
