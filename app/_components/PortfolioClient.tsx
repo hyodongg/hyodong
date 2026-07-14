@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { PortfolioData, TroubleItem, StackReason } from "@/lib/types";
 
 const NAV_ITEMS = [
@@ -139,7 +139,25 @@ function StackReasonButton({ projectKey, projectName, stackReasons }: { projectK
 
 export default function PortfolioClient({ data }: { data: PortfolioData }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
   const { troubles, stackReasons, otherProjects, experiences, projectImages } = data;
+
+  useEffect(() => {
+    const sectionIds = NAV_ITEMS.map((item) => item.href.slice(1));
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) setActiveSection(entry.target.id);
+        });
+      },
+      { rootMargin: "-45% 0px -50% 0px", threshold: 0 }
+    );
+    sectionIds.forEach((id) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
 
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
@@ -151,13 +169,29 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
           <p style={{ fontSize: "12px", color: "#9ca3af", marginTop: "4px" }}>Backend Developer</p>
         </div>
         <nav style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
-          {NAV_ITEMS.map((item) => (
-            <a key={item.href} href={item.href} style={{ color: "#d1d5db", textDecoration: "none", fontSize: "14px", transition: "color 0.2s" }}
-              onMouseEnter={e => (e.currentTarget.style.color = "#fff")}
-              onMouseLeave={e => (e.currentTarget.style.color = "#d1d5db")}>
-              {item.label}
-            </a>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const isActive = activeSection === item.href.slice(1);
+            return (
+              <a
+                key={item.href}
+                href={item.href}
+                style={{
+                  color: isActive ? "#fff" : "#d1d5db",
+                  fontWeight: isActive ? 700 : 400,
+                  textDecoration: "none",
+                  fontSize: "14px",
+                  borderLeft: isActive ? "2px solid #3b82f6" : "2px solid transparent",
+                  paddingLeft: "10px",
+                  marginLeft: "-10px",
+                  transition: "color 0.2s, border-color 0.2s",
+                }}
+                onMouseEnter={(e) => { if (!isActive) e.currentTarget.style.color = "#fff"; }}
+                onMouseLeave={(e) => { if (!isActive) e.currentTarget.style.color = "#d1d5db"; }}
+              >
+                {item.label}
+              </a>
+            );
+          })}
         </nav>
         <div style={{ marginTop: "auto", fontSize: "11px", color: "#6b7280" }}>© 2026 조효동</div>
       </aside>
@@ -204,7 +238,7 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
             </div>
             <div>
               <p style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "4px" }}>Notion</p>
-              <a href="https://app.notion.com/p/Who-is-26a0011f8b8a804eaa02d3df1d2fd2a1" target="_blank" rel="noopener noreferrer" style={{ color: "#3b82f6", fontSize: "14px" }}>Who is 효동?</a>
+              <a href="https://app.notion.com/p/Who-is-26a0011f8b8a804eaa02d3df1d2fd2a1" target="_blank" rel="noopener noreferrer" style={{ color: "#3b82f6", fontSize: "14px" }}>Who is 조효동?</a>
             </div>
             <div>
               <p style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "4px" }}>Email</p>
