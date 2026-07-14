@@ -203,6 +203,10 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
               <a href="https://velog.io/@hyodongg/posts" target="_blank" style={{ color: "#3b82f6", fontSize: "14px" }}>velog.io/@hyodongg</a>
             </div>
             <div>
+              <p style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "4px" }}>Notion</p>
+              <a href="https://app.notion.com/p/Who-is-26a0011f8b8a804eaa02d3df1d2fd2a1" target="_blank" rel="noopener noreferrer" style={{ color: "#3b82f6", fontSize: "14px" }}>Who is 효동?</a>
+            </div>
+            <div>
               <p style={{ fontSize: "12px", color: "#9ca3af", marginBottom: "4px" }}>Email</p>
               <a href="mailto:whgyehdjhd@naver.com" style={{ color: "#3b82f6", fontSize: "14px" }}>whgyehdjhd@naver.com</a>
             </div>
