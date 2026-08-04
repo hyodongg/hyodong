@@ -59,7 +59,7 @@ function TroubleModal({ projectName, item, onClose }: { projectName: string; ite
 function RoleHighlight({ num, title, children }: { num: number; title: string; children: ReactNode }) {
   return (
     <div style={{ display: "flex", gap: "12px", alignItems: "flex-start" }}>
-      <div style={{ width: "22px", height: "22px", borderRadius: "6px", background: "#3b82f6", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "12px", fontWeight: 700, flexShrink: 0, marginTop: "1px" }}>{num}</div>
+      <div style={{ fontSize: "15px", fontWeight: 700, color: "#3b82f6", lineHeight: 1.4, flexShrink: 0 }}>{num}</div>
       <div style={{ flex: 1 }}>
         <p style={{ fontSize: "14px", fontWeight: 700, color: "#111827", marginBottom: "4px" }}>{title}</p>
         <p style={{ fontSize: "13px", color: "#374151", lineHeight: 1.75, margin: 0 }}>{children}</p>
