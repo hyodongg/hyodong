@@ -468,29 +468,29 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
           </p>
           {[
             { category: "Language", skills: [
-              { name: "Python", comment: "개발 입문 언어. FastAPI, Django 및 AI 라이브러리 활용", bullets: ["Django ORM과 FastAPI의 비동기 처리 방식 차이를 이해하고 활용합니다.", "AI 라이브러리(LangChain, OpenAI SDK 등)와 연동한 서버 구축 경험이 있습니다."] },
-              { name: "Java", comment: "Spring Boot 기반 서버 개발 주력 언어 / 객체지향 설계 및 이해", bullets: ["Checked/Unchecked Exception 차이를 이해하고 꼼꼼한 예외 처리를 고민하고 설계할 수 있습니다.", "JVM 메모리 구조를 이해하며 JVM만의 차이를 압니다.", "GC 동작 방식을 이해하고 있습니다.", "인터페이스와 추상클래스의 차이를 이해하고 적절히 활용합니다.", "객체지향 4대 원칙과 SOLID 원칙을 이해하고 코드 설계에 적용합니다.", "제네릭, 스트림, 람다 등 Java 문법을 활용한 개발 경험이 있습니다."] },
+              { name: "Python", comment: "개발 입문 언어. FastAPI, Django 및 AI 라이브러리 활용", bullets: ["Django·FastAPI의 동기/비동기 처리 차이를 이해하고, LangChain 등 AI 라이브러리를 연동한 서버를 구축한 경험이 있습니다."] },
+              { name: "Java", comment: "Spring Boot 기반 서버 개발 주력 언어 / 객체지향 설계 및 이해", bullets: ["예외 처리, JVM 메모리/GC 구조, 객체지향 4대 원칙과 SOLID를 이해하고 제네릭·스트림·람다 등 문법을 활용해 설계합니다."] },
             ]},
             { category: "Framework", skills: [
-              { name: "Spring Boot", comment: "JPA, DI 등 Spring 프레임워크에 대한 이해 및 경험", bullets: ["POJO 기반 설계와 스프링 컨테이너 동작 원리, Bean 등록 방식과 DI를 이해하고 활용합니다.", "DTO/VO/Entity를 구분하여 레이어드 아키텍처 기반 설계 경험이 있습니다.", "SOLID 원칙을 적용한 객체지향적 코드 설계를 지향합니다.", "Spring Security + JWT 기반 인증/인가 및 OAuth2.0 소셜 로그인 연동 경험이 있습니다.", "JPA 엔티티 설계, 연관관계 매핑, N+1 해결(fetch join / batch size) 경험이 있습니다.", "QueryDSL을 활용한 동적 쿼리 작성 경험이 있습니다.", "@ControllerAdvice를 활용한 글로벌 예외 처리 설계 경험이 있습니다.", "JUnit5, Mockito를 활용한 단위 테스트 및 통합 테스트 작성 경험이 있습니다."] },
-              { name: "FastAPI", comment: "Python 생태계(LangChain, RAG 등)와 연동한 AI 백엔드 서버 구축 경험", bullets: ["asyncio 기반 이벤트 루프 동작 방식을 이해합니다.", "LangChain / LangGraph와 연동한 AI 추론 엔드포인트 설계 경험이 있습니다.", "Pydantic을 활용한 요청/응답 스키마 정의 및 자동 문서화 경험이 있습니다.", "비동기(async/await) 기반 AI 추론 서버 구축 경험이 있습니다."] },
+              { name: "Spring Boot", comment: "JPA, DI 등 Spring 프레임워크에 대한 이해 및 경험", bullets: ["DI 기반 레이어드 아키텍처 설계부터 JPA 성능 최적화(N+1, QueryDSL), 인증/인가, 예외 처리, 테스트까지 실무 전반을 경험했습니다."] },
+              { name: "FastAPI", comment: "Python 생태계(LangChain, RAG 등)와 연동한 AI 백엔드 서버 구축 경험", bullets: ["asyncio 기반 비동기 이벤트 루프를 이해하고, LangGraph 연동 AI 추론 서버와 Pydantic 기반 스키마 설계 경험이 있습니다."] },
             ]},
             { category: "Database", skills: [
-              { name: "MySQL", comment: "스키마 설계 / 인덱스 최적화 및 쿼리 튜닝 경험", bullets: ["트랜잭션 격리 수준의 차이를 이해하고 있습니다.", "낙관적 락 / 비관적 락 차이를 이해하고 동시성 제어에 적용합니다.", "정규화 기반의 스키마 설계 경험이 있습니다.", "인덱스 설계를 통한 쿼리 성능 최적화 경험이 있습니다.", "실행 계획(EXPLAIN)을 활용한 쿼리 튜닝 경험이 있습니다."] },
-              { name: "PostgreSQL", comment: "AI 프로젝트에서 주로 활용 / 벡터 DB 활용", bullets: ["JSONB 타입을 활용한 반정형 데이터 저장 경험이 있습니다.", "pgvector를 활용한 벡터 유사도 검색 구현 경험이 있습니다.", "RAG 파이프라인에서 임베딩 저장소로 활용한 경험이 있습니다."] },
+              { name: "MySQL", comment: "스키마 설계 / 인덱스 최적화 및 쿼리 튜닝 경험", bullets: ["트랜잭션 격리 수준과 락 전략을 이해하고, 정규화·인덱스 설계 및 EXPLAIN 기반 쿼리 튜닝 경험이 있습니다."] },
+              { name: "PostgreSQL", comment: "AI 프로젝트에서 주로 활용 / 벡터 DB 활용", bullets: ["JSONB 기반 반정형 데이터 저장과 pgvector를 활용한 벡터 검색으로 RAG 임베딩 저장소를 구축한 경험이 있습니다."] },
             ]},
             { category: "Infra / DevOps", skills: [
-              { name: "AWS", comment: "EC2, RDS, S3 등 활용한 전반적인 서비스 배포 경험", bullets: ["VPC, 서브넷, 라우팅 테이블을 설정한 네트워크 구성을 할 수 있습니다.", "ECR을 활용한 Docker 이미지 관리 및 배포 경험이 있습니다.", "S3를 활용한 정적 파일 저장 및 관리가 가능합니다.", "ACM & ALB를 이용한 트래픽 분산 및 HTTPS 설정 경험이 있습니다."] },
-              { name: "Docker", comment: "컨테이너화를 통한 환경 일관성 확보 및 서비스 배포 자동화 경험", bullets: ["멀티 스테이지 빌드를 활용한 이미지 경량화 경험이 있습니다.", "Docker Compose를 활용한 멀티 컨테이너 환경 구성 경험이 있습니다."] },
-              { name: "GitHub Actions", comment: "CI/CD 파이프라인 구성 / PR 자동 빌드 및 배포 경험", bullets: ["Docker 이미지 빌드 및 ECR 푸시 자동화 경험이 있습니다.", "단일 EC2 환경에서 컨테이너 교체 기반 Blue-Green 무중단 배포 및 헬스체크 실패 시 자동 롤백 구조를 구현한 경험이 있습니다.", "무중단 배포 방식의 차이와 장단점에 대해 이해하고 있습니다.", "배포 결과 자동 알림(Discord)로 팀과 공유합니다."] },
+              { name: "AWS", comment: "EC2, RDS, S3 등 활용한 전반적인 서비스 배포 경험", bullets: ["VPC 네트워크 구성부터 ECR·S3·ALB를 활용한 서비스 배포까지 AWS 인프라 전반을 다룬 경험이 있습니다."] },
+              { name: "Docker", comment: "컨테이너화를 통한 환경 일관성 확보 및 서비스 배포 자동화 경험", bullets: ["멀티 스테이지 빌드로 이미지를 경량화하고, Docker Compose로 멀티 컨테이너 환경을 구성한 경험이 있습니다."] },
+              { name: "GitHub Actions", comment: "CI/CD 파이프라인 구성 / PR 자동 빌드 및 배포 경험", bullets: ["Docker 빌드·배포 자동화와 Blue-Green 무중단 배포·롤백, 배포 알림까지 CI/CD 파이프라인을 구축한 경험이 있습니다."] },
             ]},
             { category: "Collaboration", skills: [
-              { name: "Git", comment: "코드리뷰 기반 협업 및 전반적인 Git Flow 이해", bullets: ["Squash merge, Rebase 등 다양한 머지 전략의 차이를 인지하고 있습니다.", "코드 리뷰 기반 협업 경험이 있습니다.", "프로젝트 시작 전, 그라운드 룰 세팅을 통해 팀 내 컨벤션을 지킵니다."] },
+              { name: "Git", comment: "코드리뷰 기반 협업 및 전반적인 Git Flow 이해", bullets: ["다양한 머지 전략을 이해하고, 코드 리뷰와 팀 컨벤션 기반의 협업 경험이 있습니다."] },
             ]},
             { category: "AI", skills: [
-              { name: "RAG", comment: "문서 기반 검색 증강 생성 파이프라인 구축 경험", bullets: ["문서 청킹, 임베딩, 벡터 검색 파이프라인을 직접 구축한 경험이 있습니다.", "청킹 전략(고정 크기, 문장 단위, 재귀적 분할)을 비교하고 적용한 경험이 있습니다.", "특히 ETL 파이프라인에서 유사도 검색을 최적화하기 위해 노력했습니다.", "검색 품질 향상을 위한 프롬프트 엔지니어링 경험이 있습니다."] },
-              { name: "LangGraph", comment: "상태 기반 AI 워크플로우 설계 및 구현", bullets: ["상태 기반 워크플로우(State Graph)를 설계하고 구현한 경험이 있습니다.", "조건 분기 노드를 활용한 AI 에이전트 흐름 제어 경험이 있습니다."] },
-              { name: "MCP", comment: "백엔드 서버와 AI 모델 간 컨텍스트 프로토콜 연동 및 Smithery AI 배포 경험", bullets: ["백엔드 서버와 AI 모델 간 컨텍스트 프로토콜 연동 경험이 있습니다.", "Tool 정의 및 스키마 설계를 통한 AI 모델과의 인터페이스 구현 경험이 있습니다.", "Smithery AI를 통한 MCP 서버 배포 경험이 있습니다."] },
+              { name: "RAG", comment: "문서 기반 검색 증강 생성 파이프라인 구축 경험", bullets: ["문서 청킹부터 임베딩, 벡터 검색까지 RAG 파이프라인을 직접 구축하고 검색 품질을 개선한 경험이 있습니다."] },
+              { name: "LangGraph", comment: "상태 기반 AI 워크플로우 설계 및 구현", bullets: ["상태 기반 워크플로우(State Graph)와 조건 분기 노드를 활용해 AI 에이전트 흐름을 설계한 경험이 있습니다."] },
+              { name: "MCP", comment: "백엔드 서버와 AI 모델 간 컨텍스트 프로토콜 연동 및 Smithery AI 배포 경험", bullets: ["Tool 스키마를 설계해 백엔드와 AI 모델 간 MCP 연동을 구현하고 Smithery로 배포한 경험이 있습니다."] },
             ]},
           ].map((group) => (
             <div key={group.category} style={{ marginBottom: "36px" }}>
