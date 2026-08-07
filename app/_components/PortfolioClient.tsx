@@ -37,6 +37,56 @@ function RichText({ text, highlightColor }: { text: string; highlightColor?: str
   );
 }
 
+// "개선 결과 — <조건>[:] <지표> <이전> → <이후>(약 <n>% 개선) ..." 형태의 줄을 지표 카드로 파싱.
+// 콜론·쉼표 유무에 관계없이 동작하도록 구두점에 최대한 관대하게 파싱하고, 패턴에 안 맞으면 null(평범한 텍스트로 표시)
+type Improvement = { condition: string; metrics: { label: string; before: string; after: string; pct: string }[] };
+
+function splitConditionFromLabel(rawLabel: string): { condition: string; label: string } {
+  const colonIdx = [...rawLabel].findIndex((c) => c === ":" || c === "：");
+  if (colonIdx !== -1) {
+    return { condition: rawLabel.slice(0, colonIdx).trim(), label: rawLabel.slice(colonIdx + 1).trim() };
+  }
+  const idx = rawLabel.indexOf("기준");
+  if (idx !== -1) {
+    return { condition: rawLabel.slice(0, idx + 2).trim(), label: rawLabel.slice(idx + 2).trim() };
+  }
+  return { condition: "", label: rawLabel.trim() };
+}
+
+function parseImprovementLine(line: string): Improvement | null {
+  const prefix = line.match(/^개선\s*결과\s*[—-]\s*/);
+  if (!prefix) return null;
+  const rest = line.slice(prefix[0].length);
+  const metricRegex = /([^,→]+?)\s+(\S+)\s*→\s*([^\s(]+)\(약\s*([\d.]+)%\s*개선\)/g;
+  const metrics: Improvement["metrics"] = [];
+  let m: RegExpExecArray | null;
+  while ((m = metricRegex.exec(rest)) !== null) {
+    metrics.push({ label: m[1].trim(), before: m[2], after: m[3], pct: m[4] });
+  }
+  if (metrics.length === 0) return null;
+
+  const { condition, label } = splitConditionFromLabel(metrics[0].label);
+  metrics[0] = { ...metrics[0], label: label || metrics[0].label };
+  return { condition, metrics };
+}
+
+function ImprovementCard({ condition, metrics }: Improvement) {
+  return (
+    <div style={{ background: "#fafafa", border: "1px solid #eef0f2", borderRadius: "8px", padding: "10px 14px", display: "flex", flexDirection: "column", gap: "5px", width: "100%" }}>
+      {condition && <p style={{ fontSize: "10.5px", fontWeight: 600, color: "#9ca3af", letterSpacing: "0.2px", margin: 0 }}>{condition}</p>}
+      {metrics.map((m, i) => (
+        <div key={i} style={{ display: "flex", alignItems: "baseline", gap: "8px", flexWrap: "wrap", fontSize: "13px", lineHeight: 1.6 }}>
+          <span style={{ color: "#6b7280", flexShrink: 0 }}>{m.label}</span>
+          <span style={{ color: "#9ca3af" }}>{m.before}</span>
+          <span style={{ color: "#d1d5db" }}>→</span>
+          <span style={{ color: "#111827", fontWeight: 600 }}>{m.after}</span>
+          <span style={{ color: "#059669", fontSize: "12px" }}>({m.pct}% 개선)</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function TroubleModal({ projectName, item, onClose }: { projectName: string; item: TroubleItem; onClose: () => void }) {
   return (
     <div onClick={onClose} style={{ position: "fixed", inset: 0, zIndex: 1000, background: "rgba(0,0,0,0.5)", display: "flex", alignItems: "center", justifyContent: "center", padding: "24px" }}>
@@ -58,12 +108,22 @@ function TroubleModal({ projectName, item, onClose }: { projectName: string; ite
                 </div>
                 <p style={{ fontSize: "11px", fontWeight: 700, color: sec.color, letterSpacing: "0.5px", textTransform: "uppercase", marginBottom: "10px" }}>{sec.label}</p>
                 <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "7px" }}>
-                  {item[sec.key].map((line, i) => (
-                    <li key={i} style={{ fontSize: "13px", color: "#374151", lineHeight: 1.75, display: "flex", gap: "8px", alignItems: "flex-start", wordBreak: "keep-all" }}>
-                      <span style={{ color: "#d1d5db", flexShrink: 0, marginTop: "1px", fontSize: "10px" }}>▸</span>
-                      <span>{line}</span>
-                    </li>
-                  ))}
+                  {item[sec.key].map((line, i) => {
+                    const improvement = sec.key === "solution" ? parseImprovementLine(line) : null;
+                    if (improvement) {
+                      return (
+                        <li key={i} style={{ marginTop: "2px" }}>
+                          <ImprovementCard {...improvement} />
+                        </li>
+                      );
+                    }
+                    return (
+                      <li key={i} style={{ fontSize: "13px", color: "#374151", lineHeight: 1.75, display: "flex", gap: "8px", alignItems: "flex-start", wordBreak: "keep-all" }}>
+                        <span style={{ color: "#d1d5db", flexShrink: 0, marginTop: "1px", fontSize: "10px" }}>▸</span>
+                        <span>{line}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               </div>
             ))}
