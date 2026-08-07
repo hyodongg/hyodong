@@ -32,7 +32,81 @@ export type ExperienceGroup = {
   items: ExperienceItem[];
 };
 
+export type Profile = {
+  name: string;
+  title: string;
+  footerYear: string;
+  githubUrl: string;
+  blogUrl: string;
+  notionUrl: string;
+  notionLabel: string;
+  email: string;
+};
+
+export type HeroData = {
+  roleTitle: string;
+  description: string;
+};
+
+export type AboutBlock = {
+  heading: string;
+  body: string;
+};
+
+export type AboutData = {
+  blocks: AboutBlock[];
+};
+
+export type RoleHighlightItem = {
+  title: string;
+  desc: string;
+};
+
+export type ContribGroupItem = {
+  category: string;
+  items: string[];
+};
+
+export type ProjectLink = {
+  label: string;
+  href: string;
+};
+
+export type ProjectCore = {
+  name: string;
+  badgeLabel: string;
+  badgeColor: string;
+  badgeBg: string;
+  period: string;
+  tagline: string;
+  links: ProjectLink[];
+  roleSummary: string;
+  roleHighlights: RoleHighlightItem[];
+  contribGroups: ContribGroupItem[];
+};
+
+export type SkillItem = {
+  name: string;
+  comment: string;
+  bullets: string[];
+};
+
+export type SkillGroup = {
+  category: string;
+  skills: SkillItem[];
+};
+
+export type SkillsData = {
+  intro: string;
+  groups: SkillGroup[];
+};
+
 export type PortfolioData = {
+  profile: Profile;
+  hero: HeroData;
+  about: AboutData;
+  projects: Record<string, ProjectCore>;
+  skills: SkillsData;
   troubles: Record<string, TroubleItem[]>;
   stackReasons: Record<string, StackReason[]>;
   otherProjects: OtherProject[];

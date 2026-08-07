@@ -1,6 +1,110 @@
 import type { PortfolioData } from "./types";
 
 export const DEFAULT_DATA: PortfolioData = {
+  profile: {
+    name: "조효동",
+    title: "Backend Developer",
+    footerYear: "2026",
+    githubUrl: "https://github.com/hyodongg",
+    blogUrl: "https://velog.io/@hyodongg/posts",
+    notionUrl: "https://app.notion.com/p/Who-is-26a0011f8b8a804eaa02d3df1d2fd2a1",
+    notionLabel: "Who is 조효동?",
+    email: "whgyehdjhd@naver.com",
+  },
+  hero: {
+    roleTitle: "백엔드 개발자",
+    description: "**끊임없이** 배우고 성장하는 것을 즐깁니다.\n오늘도 더 나은 백엔드 개발자가 되기 위해 배움을 이어가고 있습니다.",
+  },
+  about: {
+    blocks: [
+      {
+        heading: "자신에 몰입하고, 배움을 공유하며, 함께 성장하는 것을 좋아합니다.",
+        body: "개인 블로그를 운영하며 컴퓨터과학 기초 지식을 스스로 정리하고 공유하고 있습니다.\n프로젝트 진행 시에는 노션을 통해 새로 알게 된 기술들을 팀원과 공유하고, 트러블슈팅 과정을 함께 기록하며 서로의 생각을 나누는 것을 즐깁니다.\n현재까지 **노션에 30+개의 문서**로 개발 지식과 트러블슈팅을 작성해두었으며, 이를 블로그로 옮기는 과정 중에 있습니다.",
+      },
+      {
+        heading: "이유있는 개발을 지향합니다.",
+        body: "기술을 선택할 때 항상 **“왜 이 기술인가”**를 먼저 고민합니다.\n단순히 데이터베이스 하나를 선택할 때에도 RDBMS와 NoSQL의 차이는 무엇인지, 각각의 장단점은 무엇인지, 현재 서비스에 어떤 선택이 적합한지를 따져보고 결정합니다.\n동작하는 코드보다 **설명할 수 있는 코드**를 지향합니다.",
+      },
+    ],
+  },
+  projects: {
+    CLUSTAR: {
+      name: "CLUSTAR",
+      badgeLabel: "SOPT",
+      badgeColor: "#d97706",
+      badgeBg: "#fef3c7",
+      period: "2026.01 ~ 진행중",
+      tagline: "흩어진 메모를 빛나는 결과물로.\nAI가 메모를 구조화, 요약해주고, 검색과 유사 메모 추천까지 도와주는 Spring AI + RAG 기반 메모 정리 서비스입니다.",
+      links: [
+        { label: "GitHub", href: "https://github.com/TEAM-CLUSTAR/CLUSTAR-SERVER" },
+        { label: "서비스 바로가기", href: "https://www.clustar.cloud/landing" },
+      ],
+      roleSummary: "Spring AI를 활용해 RAG 검색 파이프라인을 설계하고, 배포·장애 대응·성능 테스트까지 서버 전반을 담당했습니다.",
+      roleHighlights: [
+        { title: "RAG 검색 파이프라인 직접 구축", desc: "문서 청킹 → 임베딩 → 벡터 검색으로 이어지는 ETL을 설계하고, 청킹 전략을 비교해 문서마다 다르게 적용함으로써 효율적인 임베딩이 이뤄지도록 했습니다. RAG 평가 지표를 통해 응답이 검색 문맥과 얼마나 맞물리는지 검증했습니다." },
+        { title: "AI 호출 장애 대응 체계 구축", desc: "AI 채팅 호출 실패 시 재시도 로직을 구현하고, 실패 시 그 이력을 남겨 추후 추적 및 재처리가 가능하게 만들었습니다." },
+        { title: "무중단 배포 파이프라인 구성", desc: "GitHub Actions로 PR merge → Jib 이미지 빌드 → ECR 푸시 → EC2 Blue-Green 컨테이너 교체 → 헬스체크 통과 시 트래픽 전환 흐름을 구성했고, 헬스체크 실패 시 자동 롤백되도록 했습니다." },
+      ],
+      contribGroups: [
+        { category: "테스트 & 안정성", items: ["Repository · Service · Controller 계층별 단위 테스트 작성", "nGrinder 전용 프로파일로 부하 테스트 환경을 구성하고, Prometheus로 p95 응답시간·에러율 측정 및 향상", "메모 삭제 시 DB-S3 데이터 불일치를 이벤트 기반 처리로 해결"] },
+        { category: "파일 · 이미지 처리", items: ["스토리지 비용을 고려해 파일·이미지 용량 및 개수 제한 로직 구현", "임베딩 실패 시 해당 파일만 건너뛰도록 처리해 임베딩 파이프라인 중단 방지 및 안정성 향상", "File · Image · Text Document 간 메타데이터 및 구조 통일"] },
+        { category: "API", items: ["메모 CRUD / AI 메모 생성·조회 RESTful API 구현", "마크다운 문법 제거 등 메모 가공 유틸 개발", "시스템 프롬프트 반복 고도화로 생성 품질 개선"] },
+      ],
+    },
+    NUNCHI: {
+      name: "NUNCHI",
+      badgeLabel: "캡스톤디자인",
+      badgeColor: "#7c3aed",
+      badgeBg: "#ede9fe",
+      period: "2026.03 ~ 2026.06",
+      tagline: "말 한마디로 주문 완료.\nMCP 기반 LLM Agentic AI가 음성 대화만으로 메뉴 선택부터 결제까지 처리하는 배리어프리 자율주문 키오스크 서비스입니다.",
+      links: [
+        { label: "AI Server GitHub", href: "https://github.com/CapstoneDgu/NUNCHI-AI" },
+        { label: "Backend GitHub", href: "https://github.com/CapstoneDgu/NUNCHI" },
+      ],
+      roleSummary: "LLM이 음성 대화만으로 주문과 결제를 수행하는 AI 에이전트 서버를 설계했습니다. Spring Boot로 키오스크 백엔드를 구축하고, FastAPI 기반 AI 서버에 FastMCP로 키오스크 전용 MCP 서버를 붙여 연결했으며, LangGraph로 대화 맥락을 유지하는 agentic AI 흐름을 설계했습니다.",
+      roleHighlights: [
+        { title: "LangGraph 기반 주문 에이전트 아키텍처 설계", desc: "FastAPI AI 서버 전체를 설계하고, 대화 맥락을 유지하는 상태 전이 구조로 주문 플로우를 구현했습니다." },
+        { title: "LLM 환각 위험 최소화 및 응답 속도 개선", desc: "환각이 생길 수 있는 지점을 코드 레벨에서 차단했습니다. SSE 스트리밍을 도입해 첫 응답 체감 지연이 3.1초였던 것을 0.7초(TTFB 690ms)로 78% 단축했고, 직전 발화 컨텍스트를 주입해 짧은 응답('네/응/아니요')의 의도 오분류율을 65%에서 0%로 개선했습니다." },
+        { title: "MCP로 AI가 키오스크를 직접 조작하는 구조 구현", desc: "FastMCP로 키오스크 도메인 전용 MCP 서버를 만들고 LangChain MCP 어댑터로 에이전트에 바인딩해, AI가 메뉴 조회부터 장바구니 조작·주문 확정·결제까지 직접 수행하도록 했습니다." },
+      ],
+      contribGroups: [
+        { category: "응답 품질 & 안정성", items: ["장바구니 락 충돌 시 짧은 대기 후 자동 재시도로 동시 요청 안정성 확보", "의도 분류기에 직전 AI 발화 컨텍스트를 주입해 짧은 응답('네/응/아니요') 의도 오분류 감소", "각 노드에 노드별 권한을 부여해 불필요한 Tool 호출 위험 감소", "SSE 스트리밍 도입으로 AI 첫 응답 체감 속도 개선"] },
+        { category: "AI 아키텍처 · 인프라", items: ["일반 모드/아바타 모드 행동 지침 블록을 분리해 하나의 에이전트가 두 UX를 모두 처리하도록 프롬프트 구조 리팩토링", "FastAPI AI 서버 · MCP 서버 · Spring 서버를 별도 컨테이너로 분리"] },
+        { category: "백엔드 (Spring Boot)", items: ["키오스크 주문, 결제 등 핵심 기능 API 전반 구현", "Redis 분산락을 도입하여 장바구니 동시성 제어", "JPA Specification 기반 동적 필터링 구현"] },
+      ],
+    },
+  },
+  skills: {
+    intro: "동국대학교 멋쟁이사자처럼을 시작으로 **Python, Django**를 활용해 개발에 처음 입문했습니다.\n이후 Spring 프레임워크에 관심이 생겨 **Java와 Spring Boot**를 온라인 강의로 독학했고, SOPT 연합동아리를 통해 실전 경험을 쌓으며 이해를 높였습니다.\n현재는 AI의 발전에 따라 **Spring 기반 백엔드 서버에 AI 서비스를 결합한 개발**을 해오고 있으며, RAG, LangGraph, MCP 등 AI 기술을 백엔드와 연계하는 방법에 관심이 많습니다.",
+    groups: [
+      { category: "Language", skills: [
+        { name: "Python", comment: "개발 입문 언어. FastAPI, Django 및 AI 라이브러리 활용", bullets: ["Django·FastAPI의 동기/비동기 처리 차이를 이해하고, LangChain 등 AI 라이브러리를 연동한 서버를 구축한 경험이 있습니다."] },
+        { name: "Java", comment: "Spring Boot 기반 서버 개발 주력 언어 / 객체지향 설계 및 이해", bullets: ["예외 처리, JVM 메모리/GC 구조, 객체지향 4대 원칙과 SOLID를 이해하고 제네릭·스트림·람다 등 문법을 활용해 설계합니다."] },
+      ]},
+      { category: "Framework", skills: [
+        { name: "Spring Boot", comment: "JPA, DI 등 Spring 프레임워크에 대한 이해 및 경험", bullets: ["DI 기반 레이어드 아키텍처 설계부터 JPA 성능 최적화(N+1, QueryDSL), 인증/인가, 예외 처리, 테스트까지 실무 전반을 경험했습니다."] },
+        { name: "FastAPI", comment: "Python 생태계(LangChain, RAG 등)와 연동한 AI 백엔드 서버 구축 경험", bullets: ["asyncio 기반 비동기 이벤트 루프를 이해하고, LangGraph 연동 AI 추론 서버와 Pydantic 기반 스키마 설계 경험이 있습니다."] },
+      ]},
+      { category: "Database", skills: [
+        { name: "MySQL", comment: "스키마 설계 / 인덱스 최적화 및 쿼리 튜닝 경험", bullets: ["트랜잭션 격리 수준과 락 전략을 이해하고, 정규화·인덱스 설계 및 EXPLAIN 기반 쿼리 튜닝 경험이 있습니다."] },
+        { name: "PostgreSQL", comment: "AI 프로젝트에서 주로 활용 / 벡터 DB 활용", bullets: ["JSONB 기반 반정형 데이터 저장과 pgvector를 활용한 벡터 검색으로 RAG 임베딩 저장소를 구축한 경험이 있습니다."] },
+      ]},
+      { category: "Infra / DevOps", skills: [
+        { name: "AWS", comment: "EC2, RDS, S3 등 활용한 전반적인 서비스 배포 경험", bullets: ["VPC 네트워크 구성부터 ECR·S3·ALB를 활용한 서비스 배포까지 AWS 인프라 전반을 다룬 경험이 있습니다."] },
+        { name: "Docker", comment: "컨테이너화를 통한 환경 일관성 확보 및 서비스 배포 자동화 경험", bullets: ["멀티 스테이지 빌드로 이미지를 경량화하고, Docker Compose로 멀티 컨테이너 환경을 구성한 경험이 있습니다."] },
+        { name: "GitHub Actions", comment: "CI/CD 파이프라인 구성 / PR 자동 빌드 및 배포 경험", bullets: ["Docker 빌드·배포 자동화와 Blue-Green 무중단 배포·롤백, 배포 알림까지 CI/CD 파이프라인을 구축한 경험이 있습니다."] },
+      ]},
+      { category: "Collaboration", skills: [
+        { name: "Git", comment: "코드리뷰 기반 협업 및 전반적인 Git Flow 이해", bullets: ["다양한 머지 전략을 이해하고, 코드 리뷰와 팀 컨벤션 기반의 협업 경험이 있습니다."] },
+      ]},
+      { category: "AI", skills: [
+        { name: "RAG", comment: "문서 기반 검색 증강 생성 파이프라인 구축 경험", bullets: ["문서 청킹부터 임베딩, 벡터 검색까지 RAG 파이프라인을 직접 구축하고 검색 품질을 개선한 경험이 있습니다."] },
+        { name: "LangGraph", comment: "상태 기반 AI 워크플로우 설계 및 구현", bullets: ["상태 기반 워크플로우(State Graph)와 조건 분기 노드를 활용해 AI 에이전트 흐름을 설계한 경험이 있습니다."] },
+        { name: "MCP", comment: "백엔드 서버와 AI 모델 간 컨텍스트 프로토콜 연동 및 Smithery AI 배포 경험", bullets: ["Tool 스키마를 설계해 백엔드와 AI 모델 간 MCP 연동을 구현하고 Smithery로 배포한 경험이 있습니다."] },
+      ]},
+    ],
+  },
   troubles: {
     CLUSTAR: [
       {
@@ -82,6 +186,29 @@ export const DEFAULT_DATA: PortfolioData = {
         learned: [
           "DB와 외부 스토리지(S3)처럼 트랜잭션 경계가 다른 리소스 간 일관성은 하나의 트랜잭션으로 보장할 수 없어, 커밋 이후에 처리하고 실패하면 따로 기록해 나중에 다시 처리하는 방식이 필요함을 배움",
           "Spring의 @Transactional은 AOP 프록시 기반으로 동작해 같은 클래스 내부 호출(self-invocation)에는 적용되지 않는다는 것을 직접 겪고 이해함",
+        ],
+      },
+      {
+        title: "메모 조회 응답속도를 개선해보자",
+        situation: [
+          "메모 목록 조회 API(GET /api/v1/memo)를 대상으로 부하테스트 진행",
+          "동시 요청이 늘수록 응답속도가 계속 나빠졌고, 20명 기준 p95 54ms, DB CPU 사용률이 순간 300%대까지 올라감",
+          "톰캣 스레드풀은 최대 21/200개만 사용해 여유로웠고, 병목은 DB 쪽으로 예상",
+        ],
+        cause: [
+          "pg_stat_activity로 실행 중인 쿼리를 직접 확인해보니, 메모 목록 조회 시 이미지/파일 조회 쿼리(findByMemoIdIn)가 같이 나가고 있었음",
+          "코드를 보니 이 쿼리가 이미지/파일의 전체 컬럼(image_bytes, image_name 등)을 페이지 내 모든 메모에 대해 가져오고 있었는데, 실제 응답엔 대표 이미지 1개의 s3Key와 개수만 쓰이고 있었음",
+          "흔히 말하는 N+1 문제인 쿼리 개수가 아니라 쿼리 한 번에 딸려오는 데이터량(불필요한 컬럼/행)이 진짜 원인",
+        ],
+        solution: [
+          "QueryDSL로 필요한 데이터만 가져오도록 쿼리 재작성",
+          "이미지·파일 전체 엔티티를 가져오던 findByMemoIdIn 호출을 제거하고 위 동적쿼리로 대체",
+          "개선 결과 — 20명 동시 요청 기준: 응답속도(p95) 54ms → 26ms(약 52% 개선), 처리량 528건/초 → 997건/초(약 89% 개선)",
+          "개선 결과 — 50명 동시 요청 기준: 응답속도(p95) 103ms → 71ms(약 31% 개선), 처리량 682건/초 → 1032건/초(약 51% 개선)",
+        ],
+        learned: [
+          "N+1처럼 쿼리 개수만으로 병목을 판단하면 안 되는 케이스가 있음.",
+          "이번 문제는 쿼리 개수는 문제 없고, 쿼리당 불필요한 컬럼과 행이 문제였음",
         ],
       },
     ],
