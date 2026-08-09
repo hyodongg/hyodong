@@ -4,11 +4,13 @@ export type TroubleItem = {
   cause: string[];
   solution: string[];
   learned: string[];
+  hidden?: boolean;
 };
 
 export type StackReason = {
   name: string;
   reason: string;
+  hidden?: boolean;
 };
 
 export type OtherProject = {
@@ -18,18 +20,21 @@ export type OtherProject = {
   description: string;
   stack: string;
   links: { label: string; href: string }[];
+  hidden?: boolean;
 };
 
 export type ExperienceItem = {
   title: string;
   period: string;
   desc: string;
+  hidden?: boolean;
 };
 
 export type ExperienceGroup = {
   category: string;
   color: string;
   items: ExperienceItem[];
+  hidden?: boolean;
 };
 
 export type Profile = {
@@ -51,6 +56,7 @@ export type HeroData = {
 export type AboutBlock = {
   heading: string;
   body: string;
+  hidden?: boolean;
 };
 
 export type AboutData = {
@@ -60,11 +66,13 @@ export type AboutData = {
 export type RoleHighlightItem = {
   title: string;
   desc: string;
+  hidden?: boolean;
 };
 
 export type ContribGroupItem = {
   category: string;
   items: string[];
+  hidden?: boolean;
 };
 
 export type ProjectLink = {
@@ -83,17 +91,20 @@ export type ProjectCore = {
   roleSummary: string;
   roleHighlights: RoleHighlightItem[];
   contribGroups: ContribGroupItem[];
+  hidden?: boolean;
 };
 
 export type SkillItem = {
   name: string;
   comment: string;
   bullets: string[];
+  hidden?: boolean;
 };
 
 export type SkillGroup = {
   category: string;
   skills: SkillItem[];
+  hidden?: boolean;
 };
 
 export type SkillsData = {

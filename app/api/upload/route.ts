@@ -2,6 +2,8 @@ import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { deleteProjectImage, getPortfolioData, savePortfolioData, uploadProjectImage } from "@/lib/blob";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: Request) {
   if (!(await isAuthenticated())) {
     return Response.json({ error: "인증이 필요해요" }, { status: 401 });

@@ -219,6 +219,22 @@ function ProjectThumbnail({ src, alt }: { src: string; alt: string }) {
   );
 }
 
+// 서버 아키텍처: 기본적으로 접혀 있고, 펼치면 이미지가 나오고, 이미지를 클릭하면 전체화면으로 확대됨
+function ArchitectureViewer({ src, alt }: { src: string; alt: string }) {
+  const [zoomed, setZoomed] = useState(false);
+  return (
+    <Collapsible label="서버 아키텍처 보기">
+      <img
+        src={src}
+        alt={alt}
+        onClick={() => setZoomed(true)}
+        style={{ width: "100%", borderRadius: "10px", border: "1px solid #eef0f2", cursor: "zoom-in" }}
+      />
+      {zoomed && <ImageLightbox src={src} alt={alt} onClose={() => setZoomed(false)} />}
+    </Collapsible>
+  );
+}
+
 function TroubleRow({ item, projectName }: { item: TroubleItem; projectName: string }) {
   const [open, setOpen] = useState(false);
   const [hovered, setHovered] = useState(false);
@@ -243,12 +259,14 @@ function ProjectSection({
   techStack,
   troubles,
   imageUrl,
+  architectureImageUrl,
 }: {
   projectKey: string;
   core: ProjectCore;
   techStack: StackReason[];
   troubles: TroubleItem[];
   imageUrl?: string;
+  architectureImageUrl?: string;
 }) {
   return (
     <div style={{ border: "1px solid #e5e7eb", borderRadius: "14px", padding: "32px", background: "#fafafa" }}>
@@ -270,34 +288,40 @@ function ProjectSection({
       <p style={{ fontSize: "13px", fontWeight: 700, color: "#111827", marginBottom: "8px" }}>내 역할</p>
       <p style={{ fontSize: "13px", color: "#4b5563", lineHeight: 1.7, marginBottom: "18px" }}>{core.roleSummary}</p>
       <div style={{ display: "flex", flexDirection: "column", gap: "14px", marginBottom: "18px" }}>
-        {core.roleHighlights.map((rh, i) => (
+        {core.roleHighlights.filter((rh) => !rh.hidden).map((rh, i) => (
           <RoleHighlight key={i} num={i + 1} title={rh.title}>{rh.desc}</RoleHighlight>
         ))}
       </div>
       <Collapsible label="기여 내용 전체 보기">
         <div style={{ background: "#fff", border: "1px solid #eef0f2", borderRadius: "10px", padding: "16px 18px" }}>
-          {core.contribGroups.map((g) => <ContribGroup key={g.category} category={g.category} items={g.items} />)}
+          {core.contribGroups.filter((g) => !g.hidden).map((g) => <ContribGroup key={g.category} category={g.category} items={g.items} />)}
         </div>
       </Collapsible>
 
       {/* 기술 스택 */}
       <p style={{ fontSize: "13px", fontWeight: 700, color: "#111827", margin: "22px 0 10px" }}>기술 스택</p>
       <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
-        {techStack.map((s) => <Chip key={s.name} label={s.name} />)}
+        {techStack.filter((s) => !s.hidden).map((s) => <Chip key={s.name} label={s.name} />)}
       </div>
       <div style={{ marginTop: "6px" }}>
         <Collapsible label="기술 스택 선정 이유">
           <div style={{ background: "#fff", border: "1px solid #eef0f2", borderRadius: "10px", padding: "18px 20px 4px" }}>
-            {techStack.map((s) => <StackReasonRow key={s.name} name={s.name}>{s.reason}</StackReasonRow>)}
+            {techStack.filter((s) => !s.hidden).map((s) => <StackReasonRow key={s.name} name={s.name}>{s.reason}</StackReasonRow>)}
           </div>
         </Collapsible>
       </div>
+
+      {architectureImageUrl && (
+        <div style={{ marginTop: "18px" }}>
+          <ArchitectureViewer src={`/api/image/${projectKey}-architecture?v=${encodeURIComponent(architectureImageUrl)}`} alt={`${core.name} 서버 아키텍처`} />
+        </div>
+      )}
 
       {/* Trouble Shooting */}
       <div style={{ background: "#f3f4f6", borderRadius: "10px", padding: "16px 20px", marginTop: "22px" }}>
         <p style={{ fontSize: "11px", fontWeight: 700, color: "#dc2626", letterSpacing: "1px", textTransform: "uppercase", marginBottom: "8px" }}>Trouble Shooting</p>
         <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-          {troubles.map((t) => <TroubleRow key={t.title} item={t} projectName={core.name} />)}
+          {troubles.filter((t) => !t.hidden).map((t) => <TroubleRow key={t.title} item={t} projectName={core.name} />)}
         </div>
       </div>
     </div>
@@ -412,8 +436,8 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
             </div>
           </div>
           <p style={{ fontSize: "16px", fontWeight: 600, color: "#111827", marginBottom: "32px" }}>안녕하세요, 백엔드 개발자 {profile.name}입니다.</p>
-          {about.blocks.map((block, i) => (
-            <div key={i} style={{ marginBottom: i < about.blocks.length - 1 ? "28px" : 0 }}>
+          {about.blocks.filter((block) => !block.hidden).map((block, i, arr) => (
+            <div key={i} style={{ marginBottom: i < arr.length - 1 ? "28px" : 0 }}>
               <p style={{ color: "#3b82f6", fontWeight: 700, fontSize: "15px", marginBottom: "8px" }}>{block.heading}</p>
               <p style={{ color: "#4b5563", fontSize: "14px", lineHeight: 1.9 }}>
                 <RichText text={block.body} />
@@ -427,15 +451,15 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
           <h2 style={{ fontSize: "28px", fontWeight: 700, marginBottom: "8px" }}>Projects</h2>
           <div style={{ width: "40px", height: "3px", background: "#3b82f6", marginBottom: "32px" }} />
           <div style={{ display: "flex", flexDirection: "column", gap: "40px" }}>
-            <ProjectSection projectKey="CLUSTAR" core={projects.CLUSTAR} techStack={stackReasons.CLUSTAR ?? []} troubles={troubles.CLUSTAR ?? []} imageUrl={projectImages.CLUSTAR} />
-            <ProjectSection projectKey="NUNCHI" core={projects.NUNCHI} techStack={stackReasons.NUNCHI ?? []} troubles={troubles.NUNCHI ?? []} imageUrl={projectImages.NUNCHI} />
+            {!projects.CLUSTAR.hidden && <ProjectSection projectKey="CLUSTAR" core={projects.CLUSTAR} techStack={stackReasons.CLUSTAR ?? []} troubles={troubles.CLUSTAR ?? []} imageUrl={projectImages.CLUSTAR} architectureImageUrl={projectImages["CLUSTAR-architecture"]} />}
+            {!projects.NUNCHI.hidden && <ProjectSection projectKey="NUNCHI" core={projects.NUNCHI} techStack={stackReasons.NUNCHI ?? []} troubles={troubles.NUNCHI ?? []} imageUrl={projectImages.NUNCHI} architectureImageUrl={projectImages["NUNCHI-architecture"]} />}
           </div>
 
           {/* Other Projects */}
           <div style={{ marginTop: "48px" }}>
             <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: "#9ca3af", textTransform: "uppercase", marginBottom: "16px" }}>Other Projects</p>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))", gap: "16px" }}>
-              {otherProjects.map((p) => (
+              {otherProjects.filter((p) => !p.hidden).map((p) => (
                 <div key={p.name} style={{ display: "flex", flexDirection: "column", border: "1px solid #e5e7eb", borderRadius: "12px", padding: "20px 22px", background: "#fff" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "8px" }}>
                     <h4 style={{ fontSize: "15px", fontWeight: 700, margin: 0 }}>{p.emoji} {p.name}</h4>
@@ -459,49 +483,57 @@ export default function PortfolioClient({ data }: { data: PortfolioData }) {
           <p style={{ color: "#4b5563", fontSize: "15px", lineHeight: 1.9, marginBottom: "48px" }}>
             <RichText text={skills.intro} />
           </p>
-          {skills.groups.map((group) => (
-            <div key={group.category} style={{ marginBottom: "36px" }}>
-              <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: "#9ca3af", textTransform: "uppercase", marginBottom: "14px" }}>{group.category}</p>
-              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))", gap: "12px" }}>
-                {group.skills.map((skill) => (
-                  <div key={skill.name} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "10px", padding: "16px 20px" }}>
-                    <p style={{ fontWeight: 700, fontSize: "14px", marginBottom: "4px" }}>{skill.name}</p>
-                    <p style={{ color: "#9ca3af", fontSize: "11px", marginBottom: "10px", lineHeight: 1.5 }}>{skill.comment}</p>
-                    <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "4px" }}>
-                      {skill.bullets.map((b, i) => (
-                        <li key={i} style={{ fontSize: "12px", color: "#4b5563", lineHeight: 1.7, display: "flex", gap: "6px" }}>
-                          <span style={{ color: "#3b82f6", flexShrink: 0, marginTop: "1px" }}>·</span>
-                          <span>{b}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+          {skills.groups.filter((group) => !group.hidden).map((group) => {
+            const visibleSkills = group.skills.filter((s) => !s.hidden);
+            if (visibleSkills.length === 0) return null;
+            return (
+              <div key={group.category} style={{ marginBottom: "36px" }}>
+                <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: "#9ca3af", textTransform: "uppercase", marginBottom: "14px" }}>{group.category}</p>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(380px, 1fr))", gap: "12px" }}>
+                  {visibleSkills.map((skill) => (
+                    <div key={skill.name} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "10px", padding: "16px 20px" }}>
+                      <p style={{ fontWeight: 700, fontSize: "14px", marginBottom: "4px" }}>{skill.name}</p>
+                      <p style={{ color: "#9ca3af", fontSize: "11px", marginBottom: "10px", lineHeight: 1.5 }}>{skill.comment}</p>
+                      <ul style={{ listStyle: "none", padding: 0, margin: 0, display: "flex", flexDirection: "column", gap: "4px" }}>
+                        {skill.bullets.map((b, i) => (
+                          <li key={i} style={{ fontSize: "12px", color: "#4b5563", lineHeight: 1.7, display: "flex", gap: "6px" }}>
+                            <span style={{ color: "#3b82f6", flexShrink: 0, marginTop: "1px" }}>·</span>
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </section>
 
         {/* EXPERIENCES */}
         <section id="experiences" style={{ padding: "80px 60px", background: "#f9fafb" }}>
           <h2 style={{ fontSize: "28px", fontWeight: 700, marginBottom: "8px" }}>Experiences</h2>
           <div style={{ width: "40px", height: "3px", background: "#3b82f6", marginBottom: "32px" }} />
-          {experiences.map((group) => (
-            <div key={group.category} style={{ marginBottom: "36px" }}>
-              <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: group.color, textTransform: "uppercase", marginBottom: "12px" }}>{group.category}</p>
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                {group.items.map((item) => (
-                  <div key={item.title} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "10px", padding: "16px 24px" }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
-                      <h3 style={{ fontWeight: 600, fontSize: "14px", color: "#111827", margin: 0, lineHeight: 1.5, flex: 1 }}>{item.title}</h3>
-                      {item.period && <span style={{ fontSize: "12px", color: "#9ca3af", whiteSpace: "nowrap", flexShrink: 0, paddingTop: "1px" }}>{item.period}</span>}
+          {experiences.filter((group) => !group.hidden).map((group) => {
+            const visibleItems = group.items.filter((item) => !item.hidden);
+            if (visibleItems.length === 0) return null;
+            return (
+              <div key={group.category} style={{ marginBottom: "36px" }}>
+                <p style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "2px", color: group.color, textTransform: "uppercase", marginBottom: "12px" }}>{group.category}</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                  {visibleItems.map((item) => (
+                    <div key={item.title} style={{ background: "#fff", border: "1px solid #e5e7eb", borderRadius: "10px", padding: "16px 24px" }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: "16px" }}>
+                        <h3 style={{ fontWeight: 600, fontSize: "14px", color: "#111827", margin: 0, lineHeight: 1.5, flex: 1 }}>{item.title}</h3>
+                        {item.period && <span style={{ fontSize: "12px", color: "#9ca3af", whiteSpace: "nowrap", flexShrink: 0, paddingTop: "1px" }}>{item.period}</span>}
+                      </div>
+                      {item.desc && <p style={{ color: "#9ca3af", fontSize: "11px", lineHeight: 1.7, marginTop: "6px", marginBottom: 0 }}>{item.desc}</p>}
                     </div>
-                    {item.desc && <p style={{ color: "#9ca3af", fontSize: "11px", lineHeight: 1.7, marginTop: "6px", marginBottom: 0 }}>{item.desc}</p>}
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </section>
 
       </main>

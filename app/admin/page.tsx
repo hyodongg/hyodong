@@ -89,17 +89,30 @@ function SectionCard({ title, desc, children, defaultOpen = true }: { title: str
   );
 }
 
+function HideToggle({ hidden, onChange }: { hidden?: boolean; onChange: (v: boolean) => void }) {
+  return (
+    <label
+      onClick={e => e.stopPropagation()}
+      style={{ display: "flex", alignItems: "center", gap: "4px", fontSize: "11px", color: hidden ? "#dc2626" : "#6b7280", cursor: "pointer", userSelect: "none" }}
+    >
+      <input type="checkbox" checked={!!hidden} onChange={e => onChange(e.target.checked)} />
+      숨기기
+    </label>
+  );
+}
+
 function CollapsibleRow({
-  title, onDelete, deleteLabel = "삭제", children, forceOpen, onToggle,
-}: { title: string; onDelete: () => void; deleteLabel?: string; children: React.ReactNode; forceOpen?: boolean; onToggle?: (open: boolean) => void }) {
+  title, onDelete, deleteLabel = "삭제", children, forceOpen, onToggle, hidden, onToggleHidden,
+}: { title: string; onDelete: () => void; deleteLabel?: string; children: React.ReactNode; forceOpen?: boolean; onToggle?: (open: boolean) => void; hidden?: boolean; onToggleHidden?: (v: boolean) => void }) {
   const [openState, setOpenState] = useState(false);
   const open = forceOpen ?? openState;
   const setOpen = (v: boolean) => { setOpenState(v); onToggle?.(v); };
   return (
-    <div className="adm-subcard">
+    <div className="adm-subcard" style={hidden ? { opacity: 0.55 } : undefined}>
       <div onClick={() => setOpen(!open)} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", cursor: "pointer" }}>
-        <span style={{ fontSize: "13px", fontWeight: 600, color: "#111827" }}>{title || "(제목 없음)"}</span>
+        <span style={{ fontSize: "13px", fontWeight: 600, color: "#111827", textDecoration: hidden ? "line-through" : "none" }}>{title || "(제목 없음)"}</span>
         <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+          {onToggleHidden && <HideToggle hidden={hidden} onChange={onToggleHidden} />}
           <button onClick={e => { e.stopPropagation(); onDelete(); }} className="adm-link-btn adm-link-btn-danger">{deleteLabel}</button>
           <span style={{ color: "#9ca3af", fontSize: "11px" }}>{open ? "▲" : "▼"}</span>
         </div>
@@ -117,7 +130,7 @@ function TroubleEditor({ items, onChange }: { items: TroubleItem[]; onChange: (v
   return (
     <div>
       {items.map((item, i) => (
-        <CollapsibleRow key={i} title={item.title} onDelete={() => onChange(items.filter((_, j) => j !== i))} forceOpen={expanded === i} onToggle={o => setExpanded(o ? i : null)}>
+        <CollapsibleRow key={i} title={item.title} onDelete={() => onChange(items.filter((_, j) => j !== i))} forceOpen={expanded === i} onToggle={o => setExpanded(o ? i : null)} hidden={item.hidden} onToggleHidden={v => update(i, { hidden: v })}>
           <Field label="제목" value={item.title} onChange={v => update(i, { title: v })} />
           <ListField label="문제 상황" items={item.situation} onChange={v => update(i, { situation: v })} multiline />
           <ListField label="원인 분석" items={item.cause} onChange={v => update(i, { cause: v })} multiline />
@@ -142,10 +155,11 @@ function StackEditor({ items, onChange }: { items: StackReason[]; onChange: (v: 
   return (
     <div>
       {items.map((item, i) => (
-        <div key={i} className="adm-subcard">
+        <div key={i} className="adm-subcard" style={item.hidden ? { opacity: 0.55 } : undefined}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "8px" }}>
-            <span style={{ fontSize: "13px", fontWeight: 600 }}>{item.name || `스택 ${i + 1}`}</span>
+            <span style={{ fontSize: "13px", fontWeight: 600, textDecoration: item.hidden ? "line-through" : "none" }}>{item.name || `스택 ${i + 1}`}</span>
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <HideToggle hidden={item.hidden} onChange={v => update(i, { hidden: v })} />
               <button onClick={() => move(i, -1)} disabled={i === 0} className="adm-icon-btn">▲</button>
               <button onClick={() => move(i, 1)} disabled={i === items.length - 1} className="adm-icon-btn">▼</button>
               <button onClick={() => onChange(items.filter((_, j) => j !== i))} className="adm-link-btn adm-link-btn-danger">삭제</button>
@@ -165,10 +179,13 @@ function RoleHighlightsEditor({ items, onChange }: { items: RoleHighlightItem[];
   return (
     <div>
       {items.map((item, i) => (
-        <div key={i} className="adm-subcard">
+        <div key={i} className="adm-subcard" style={item.hidden ? { opacity: 0.55 } : undefined}>
           <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
             <span style={{ fontSize: "12px", color: "#9ca3af", fontWeight: 700 }}>{i + 1}</span>
-            <button onClick={() => onChange(items.filter((_, j) => j !== i))} className="adm-link-btn adm-link-btn-danger">삭제</button>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+              <HideToggle hidden={item.hidden} onChange={v => update(i, { hidden: v })} />
+              <button onClick={() => onChange(items.filter((_, j) => j !== i))} className="adm-link-btn adm-link-btn-danger">삭제</button>
+            </div>
           </div>
           <Field label="제목" value={item.title} onChange={v => update(i, { title: v })} />
           <Field label="본문" value={item.desc} onChange={v => update(i, { desc: v })} multiline />
@@ -184,8 +201,9 @@ function ContribGroupsEditor({ items, onChange }: { items: ContribGroupItem[]; o
   return (
     <div>
       {items.map((item, i) => (
-        <div key={i} className="adm-subcard">
-          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "4px" }}>
+        <div key={i} className="adm-subcard" style={item.hidden ? { opacity: 0.55 } : undefined}>
+          <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "4px", gap: "10px", alignItems: "center" }}>
+            <HideToggle hidden={item.hidden} onChange={v => update(i, { hidden: v })} />
             <button onClick={() => onChange(items.filter((_, j) => j !== i))} className="adm-link-btn adm-link-btn-danger">카테고리 삭제</button>
           </div>
           <Field label="카테고리명" value={item.category} onChange={v => update(i, { category: v })} />
@@ -221,7 +239,7 @@ function ProjectsEditor({ items, onChange }: { items: OtherProject[]; onChange: 
   return (
     <div>
       {items.map((item, i) => (
-        <CollapsibleRow key={i} title={`${item.emoji} ${item.name || "(이름 없음)"}`} onDelete={() => onChange(items.filter((_, j) => j !== i))} forceOpen={expanded === i} onToggle={o => setExpanded(o ? i : null)}>
+        <CollapsibleRow key={i} title={`${item.emoji} ${item.name || "(이름 없음)"}`} onDelete={() => onChange(items.filter((_, j) => j !== i))} forceOpen={expanded === i} onToggle={o => setExpanded(o ? i : null)} hidden={item.hidden} onToggleHidden={v => update(i, { hidden: v })}>
           <div style={{ display: "grid", gridTemplateColumns: "1fr 2fr 2fr", gap: "10px" }}>
             <Field label="이모지" value={item.emoji} onChange={v => update(i, { emoji: v })} />
             <Field label="이름" value={item.name} onChange={v => update(i, { name: v })} />
@@ -253,10 +271,11 @@ function ExperiencesEditor({ groups, onChange }: { groups: ExperienceGroup[]; on
   return (
     <div>
       {groups.map((group, gi) => (
-        <div key={gi} className="adm-subcard">
+        <div key={gi} className="adm-subcard" style={group.hidden ? { opacity: 0.55 } : undefined}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <span onClick={() => setExpanded(expanded === gi ? null : gi)} style={{ cursor: "pointer", fontSize: "13px", fontWeight: 700, color: group.color, flex: 1 }}>{group.category || "(이름 없는 카테고리)"}</span>
+            <span onClick={() => setExpanded(expanded === gi ? null : gi)} style={{ cursor: "pointer", fontSize: "13px", fontWeight: 700, color: group.color, flex: 1, textDecoration: group.hidden ? "line-through" : "none" }}>{group.category || "(이름 없는 카테고리)"}</span>
             <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <HideToggle hidden={group.hidden} onChange={v => updateGroup(gi, { hidden: v })} />
               <button onClick={() => moveGroup(gi, -1)} disabled={gi === 0} className="adm-icon-btn">▲</button>
               <button onClick={() => moveGroup(gi, 1)} disabled={gi === groups.length - 1} className="adm-icon-btn">▼</button>
               <button onClick={() => { onChange(groups.filter((_, j) => j !== gi)); setExpanded(null); }} className="adm-link-btn adm-link-btn-danger">카테고리 삭제</button>
@@ -270,8 +289,9 @@ function ExperiencesEditor({ groups, onChange }: { groups: ExperienceGroup[]; on
                 <Field label="색상 (hex)" value={group.color} onChange={v => updateGroup(gi, { color: v })} />
               </div>
               {group.items.map((item, ii) => (
-                <div key={ii} className="adm-subcard adm-subcard-nested">
-                  <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "4px" }}>
+                <div key={ii} className="adm-subcard adm-subcard-nested" style={item.hidden ? { opacity: 0.55 } : undefined}>
+                  <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "4px", gap: "10px", alignItems: "center" }}>
+                    <HideToggle hidden={item.hidden} onChange={v => { const its = [...group.items]; its[ii] = { ...its[ii], hidden: v }; updateGroup(gi, { items: its }); }} />
                     <button onClick={() => updateGroup(gi, { items: group.items.filter((_, j) => j !== ii) })} className="adm-link-btn adm-link-btn-danger">삭제</button>
                   </div>
                   <Field label="제목" value={item.title} onChange={v => { const its = [...group.items]; its[ii] = { ...its[ii], title: v }; updateGroup(gi, { items: its }); }} />
@@ -303,15 +323,18 @@ function SkillsEditor({ data, onChange }: { data: PortfolioData["skills"]; onCha
     <div>
       <Field label="Skills 섹션 소개글" value={data.intro} onChange={v => onChange({ ...data, intro: v })} multiline hint="줄바꿈은 그대로 적용되고, **텍스트** 로 감싸면 강조 표시됩니다." />
       {data.groups.map((group, gi) => (
-        <div key={gi} className="adm-subcard">
+        <div key={gi} className="adm-subcard" style={group.hidden ? { opacity: 0.55 } : undefined}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
             <Field label="카테고리명" value={group.category} onChange={v => updateGroup(gi, { category: v })} />
-            <button onClick={() => onChange({ ...data, groups: data.groups.filter((_, j) => j !== gi) })} className="adm-link-btn adm-link-btn-danger" style={{ marginLeft: "12px" }}>카테고리 삭제</button>
+            <div style={{ display: "flex", gap: "10px", alignItems: "center", marginLeft: "12px" }}>
+              <HideToggle hidden={group.hidden} onChange={v => updateGroup(gi, { hidden: v })} />
+              <button onClick={() => onChange({ ...data, groups: data.groups.filter((_, j) => j !== gi) })} className="adm-link-btn adm-link-btn-danger">카테고리 삭제</button>
+            </div>
           </div>
           {group.skills.map((skill, si) => {
             const key = `${gi}-${si}`;
             return (
-              <CollapsibleRow key={key} title={skill.name} onDelete={() => updateGroup(gi, { skills: group.skills.filter((_, j) => j !== si) })} forceOpen={expanded === key} onToggle={o => setExpanded(o ? key : null)}>
+              <CollapsibleRow key={key} title={skill.name} onDelete={() => updateGroup(gi, { skills: group.skills.filter((_, j) => j !== si) })} forceOpen={expanded === key} onToggle={o => setExpanded(o ? key : null)} hidden={skill.hidden} onToggleHidden={v => updateSkill(gi, si, { hidden: v })}>
                 <Field label="이름" value={skill.name} onChange={v => updateSkill(gi, si, { name: v })} />
                 <Field label="한줄 코멘트" value={skill.comment} onChange={v => updateSkill(gi, si, { comment: v })} />
                 <ListField label="세부 경험" items={skill.bullets} onChange={v => updateSkill(gi, si, { bullets: v })} multiline />
@@ -331,6 +354,12 @@ function ProjectCoreEditor({ core, onChange }: { core: ProjectCore; onChange: (v
   return (
     <>
       <SectionCard title="기본 정보">
+        <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "10px" }}>
+          <label style={{ display: "flex", alignItems: "center", gap: "6px", fontSize: "12px", color: core.hidden ? "#dc2626" : "#6b7280", cursor: "pointer", fontWeight: 600 }}>
+            <input type="checkbox" checked={!!core.hidden} onChange={e => update({ hidden: e.target.checked })} />
+            이 프로젝트 전체를 사이트에서 숨기기
+          </label>
+        </div>
         <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "10px" }}>
           <Field label="프로젝트명" value={core.name} onChange={v => update({ name: v })} />
           <Field label="배지 텍스트" value={core.badgeLabel} onChange={v => update({ badgeLabel: v })} />
@@ -604,10 +633,13 @@ export default function AdminPage() {
               <SectionCard title="About Me">
                 <p className="adm-hint" style={{ marginBottom: "10px" }}>본문은 두 개의 단락으로 구성됩니다. 각 단락은 제목(강조 문구)과 본문을 가집니다.</p>
                 {data.about.blocks.map((block, i) => (
-                  <div key={i} className="adm-subcard">
+                  <div key={i} className="adm-subcard" style={block.hidden ? { opacity: 0.55 } : undefined}>
                     <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px" }}>
                       <span style={{ fontSize: "12px", color: "#9ca3af", fontWeight: 700 }}>단락 {i + 1}</span>
-                      <button onClick={() => setData({ ...data, about: { blocks: data.about.blocks.filter((_, j) => j !== i) } })} className="adm-link-btn adm-link-btn-danger">삭제</button>
+                      <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                        <HideToggle hidden={block.hidden} onChange={v => { const bs = [...data.about.blocks]; bs[i] = { ...bs[i], hidden: v }; setData({ ...data, about: { blocks: bs } }); }} />
+                        <button onClick={() => setData({ ...data, about: { blocks: data.about.blocks.filter((_, j) => j !== i) } })} className="adm-link-btn adm-link-btn-danger">삭제</button>
+                      </div>
                     </div>
                     <Field label="강조 제목" value={block.heading} onChange={v => { const bs = [...data.about.blocks]; bs[i] = { ...bs[i], heading: v }; setData({ ...data, about: { blocks: bs } }); }} />
                     <Field label="본문" value={block.body} onChange={v => { const bs = [...data.about.blocks]; bs[i] = { ...bs[i], body: v }; setData({ ...data, about: { blocks: bs } }); }} multiline hint="줄바꿈은 그대로 적용되고, **텍스트** 로 감싸면 굵게 표시됩니다." />
@@ -630,7 +662,7 @@ export default function AdminPage() {
                 <TroubleEditor items={data.troubles[tab] ?? []} onChange={v => setData({ ...data, troubles: { ...data.troubles, [tab]: v } })} />
               </SectionCard>
 
-              <SectionCard title="대표 이미지">
+              <SectionCard title="대표 이미지" desc="프로젝트 제목 옆에 작은 썸네일로 표시됩니다.">
                 {data.projectImages[tab] && (
                   <img src={`/api/image/${tab}?v=${encodeURIComponent(data.projectImages[tab])}`} alt={`${tab} 대표 이미지`} style={{ width: "100%", maxHeight: "260px", objectFit: "cover", borderRadius: "10px", marginBottom: "14px", border: "1px solid #e5e7eb" }} />
                 )}
@@ -645,6 +677,27 @@ export default function AdminPage() {
                   />
                   {data.projectImages[tab] && (
                     <button onClick={() => handleImageDelete(tab)} disabled={uploading} className="adm-btn adm-btn-danger-outline">이미지 삭제</button>
+                  )}
+                </div>
+                {uploading && <p className="adm-hint">업로드 중...</p>}
+                {uploadMsg && <p style={{ fontSize: "12px", color: uploadMsg.includes("✓") ? "#059669" : "#ef4444", marginTop: "8px" }}>{uploadMsg}</p>}
+              </SectionCard>
+
+              <SectionCard title="서버 아키텍처" desc="사이트에서는 바로 안 보이고, '서버 아키텍처 보기'를 클릭해야 펼쳐집니다.">
+                {data.projectImages[`${tab}-architecture`] && (
+                  <img src={`/api/image/${tab}-architecture?v=${encodeURIComponent(data.projectImages[`${tab}-architecture`])}`} alt={`${tab} 서버 아키텍처`} style={{ width: "100%", borderRadius: "10px", marginBottom: "14px", border: "1px solid #e5e7eb" }} />
+                )}
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                  <input
+                    ref={el => { fileInputRefs.current[`${tab}-architecture`] = el; }}
+                    type="file"
+                    accept="image/*"
+                    disabled={uploading}
+                    onChange={e => { const file = e.target.files?.[0]; if (file) handleImageUpload(`${tab}-architecture`, file); }}
+                    style={{ fontSize: "13px" }}
+                  />
+                  {data.projectImages[`${tab}-architecture`] && (
+                    <button onClick={() => handleImageDelete(`${tab}-architecture`)} disabled={uploading} className="adm-btn adm-btn-danger-outline">이미지 삭제</button>
                   )}
                 </div>
                 {uploading && <p className="adm-hint">업로드 중...</p>}

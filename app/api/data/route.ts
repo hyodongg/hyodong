@@ -2,6 +2,8 @@ import { revalidatePath } from "next/cache";
 import { isAuthenticated } from "@/lib/auth";
 import { getPortfolioData, savePortfolioData } from "@/lib/blob";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const data = await getPortfolioData();
   return Response.json(data);
